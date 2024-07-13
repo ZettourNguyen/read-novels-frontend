@@ -7,7 +7,12 @@ export default {
   theme: {
 
     colors: {
-      gray_text: '#161616',
+      gray_hover: '#F5F5F5',
+      gold: '#b78a28',
+      red: '#dc362e',
+      dark_gold: '#b78a28',
+      theme_color: '#2b4eff',
+      gray_text: '#0c0c0c',
       purple: '#7e5bef',
       pink: '#ff49db',
       orange: '#ff7849',
@@ -17,16 +22,20 @@ export default {
       gray_dark: '#273444',
       gray: '#969696',
       secondary: '#4a5568',
-      gray_light: 'rgba(227,235,246,.5)',
+      gray_light: 'rgba(227,235,246,.8)',
       gray_border:'#edf2f7',
       sky_blue: '#3398D4',
       sky_blue_light: '#2fb5fa',
       sky_blue_light_500: '#2fb5faad'
     },
+    // fontFamily: {
+    //   sans: ['Noto Sans', 'sans-serif'],
+    //   serif: ['Merriweather', 'serif'],
+    // },
     fontFamily: {
-      sans: ['Noto Sans', 'sans-serif'],
-      serif: ['Merriweather', 'serif'],
-    },
+      sans: ['Avenir Next', 'Arial', 'Helvetica', 'sans-serif'],
+      serif: ['Avenir Next', 'Arial', 'Helvetica', 'sans-serif'],
+    },      
     extend: {
       backgroundImage: {
         'home-banner': "url('/src/assets/imgs/banner-1.png')",
@@ -35,7 +44,7 @@ export default {
       container: {
         center: true,
         padding: {
-          DEFAULT: '1rem',
+          DEFAULT: '7rem',
           xs: '12px',
         },
         screens: {

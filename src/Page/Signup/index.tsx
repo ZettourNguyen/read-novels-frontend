@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 function SignupForm() {
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,17 +25,35 @@ function SignupForm() {
       <div >
         <p>Đăng ký bằng email</p>
         <form action="" method="post">
-            <input 
+          <input
             type="text"
-            className='text-base h-10 px-2 w-full mb-4 border border-gray outline-none' 
+            className='text-base h-10 px-2 w-full mb-4 border border-gray outline-none'
             placeholder="Email@example.com"
             onChange={(e) => setEmail(e.target.value)}
             required
-            />
-            <button
+          />
+          <input
+            type="password"
+            id="password"
+            value={password}
+            className='text-base h-10 px-2 w-full mb-4 border border-gray outline-none'
+            placeholder="Mật khẩu"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            value={password}
+            className='text-base h-10 px-2 w-full mb-4 border border-gray outline-none'
+            placeholder="Nhập lại mật khẩu"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
             type="submit"
             className="bg-sky_blue_light text-center text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >Send</button>
+          >Send</button>
         </form>
       </div>
     </div>

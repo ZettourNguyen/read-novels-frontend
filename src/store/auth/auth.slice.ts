@@ -4,8 +4,14 @@ import { RootState } from '../store'
 
 interface User {
     id: number,
+    username: string,
     email: string,
-    displayName: string
+    avatar: string,
+    birthday: string,
+    gender: number,
+    confirmer: boolean,
+    createAt: string,
+    updateAt: string
 }
 
 interface AuthState {

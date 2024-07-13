@@ -33,44 +33,44 @@ function UserSetup() {
             Tài khoản
           </li>
           <li
-            onClick={() => handleSetting("tieuSu")}
+            onClick={() => handleSetting("bookmark")}
             className={`hover:text-sky_blue_light px-5 py-2   ${
-              activeForm === "tieuSu"
+              activeForm === "bookmark"
                 ? "text-gray font-bold border-l-4  border-sky_blue_light pl-2"
                 : "text-gray-500"
             }`}
           >
-            Tiểu sử
+            Truyện đánh dấu
           </li>
           <li
-            onClick={() => handleSetting("Series")}
+            onClick={() => handleSetting("follow")}
             className={`hover:text-sky_blue_light px-5 py-2   ${
-              activeForm === "Series"
+              activeForm === "follow"
                 ? "text-gray font-bold border-l-4  border-sky_blue_light pl-2"
                 : "text-gray-500"
             }`}
           >
-            Series
+            Truyện theo dõi
           </li>
           <li
-            onClick={() => handleSetting("daChan")}
-            className={`hover:text-sky_blue_light px-5 py-2   ${
-              activeForm === "daChan"
+            onClick={() => handleSetting("history")}
+            className={`hover:text-sky_blue_light px-5 py-2   
+              ${activeForm === "history"
                 ? "text-gray font-bold border-l-4  border-sky_blue_light pl-2"
-                : "text-gray-500"
-            }`}
+                : "text-gray-500"}`
+              }
           >
-            Đã chặn
+            Truyện đã xem
           </li>
         </ul>
 
         {/* form setting account */}
-        <form action="">
+        <div>
           {activeForm === "taiKhoan" && <AccountForm />}
-          {activeForm === "tieuSu" && <ProfileForm />}
-          {activeForm === "Series" && <SeriesForm />}
-          {activeForm === "daChan" && <BlackListForm />}
-        </form>
+          {activeForm === "bookmark" && <ProfileForm />}
+          {activeForm === "follow" && <SeriesForm />}
+          {activeForm === "history" && <BlackListForm />}
+        </div>
       </div>
     </div>
   );

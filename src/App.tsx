@@ -13,6 +13,8 @@ import PrivateRoutes from "./router/PrivateRoutes";
 import UserSetup from "./Page/User/Setup";
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import Novel from "./Page/Novel";
+import Uploader from "./Page/uploader";
 
 
 function App() {
@@ -26,12 +28,14 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/private" element={<Private />} />
+          <Route path="/uploader" element={<Uploader />} />
           <Route element={<MainLayout />}>
             <Route path="/user/setup" element={<UserSetup />} />
           </Route>
         </Route>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/novel/:noveltitle" element={<Novel />} />
         </Route>
       </Routes>
     </CustomRouter>

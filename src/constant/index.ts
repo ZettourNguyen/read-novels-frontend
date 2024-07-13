@@ -1,145 +1,146 @@
 export const newsFeedData = [
     
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/d686eb50386611eeafd619148f101843.png',
-        title: 'Bình đẳng giới và vấn đề " Nữ quyền " tại Việt Nam.',
-        brief: 'Đây là hiện trạng về bình đẳng giới tính trên thế giới và góc nhìn cá nhân của chủ bài viết về vấn đề nữ quyền tại...',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/3ecea9e0380411eea621efa4bc140a14.jpeg',
+        image_preview: 'https://static.cdnno.com/poster/dai-tuyen-vo-thanh-tu-luyen-cong-them-diem-bat-dau/150.jpg?1698792935',
+        title: 'Đại Tuyên Võ Thánh',
+        author: 'Nguyeen Van Thinh',
+        time: '1 phút trước',
+        link: 'https://metruyencv.com/truyen/dai-tuyen-vo-thanh-tu-luyen-cong-them-diem-bat-dau'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/c2f86c30334311ee9573f74454a84ba9.png',
-        title: 'TỰ YÊU LẤY MÌNH TRƯỚC KHI YÊU CẬU ẤY',
-        brief: 'Mình muốn cậu xuất hiện trong mọi ngày bình thường hay đặc biệt của mình, từng giây từng phút đều để hơi thở của...',
-        categories: 'YÊU',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/c3a12280117011eda19057ce64d94446.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/tu-hai-nhi-bat-dau-nhap-dao/150.jpg?1714738581',
+        title: 'Từ hài nhi bắt đầu nhập đạo',
+        author: 'Nguyeen Van Thinh',
+        time: '2 phút trước',
+        link: 'https://metruyencv.com/truyen/tu-hai-nhi-bat-dau-nhap-dao'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/effde69037fa11eea621efa4bc140a14.png',
-        title: 'Hai mươi ba!',
-        brief: 'Vào cuối ngày đầu tiên của tuổi 23, tôi mới nhận ra rằng: 365 ngày ở tuổi 22 chính là một món quà!',
-        categories: 'THINKING OUT LOUD',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/96afa56057a411eda65a0b19be16580e.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/quang-am-chi-ngoai/150.jpg?1718153607',
+        title: 'Quang Âm Chi Ngoại',
+        author: 'Nguyeen Van Thinh',
+        time: '3 phút trước',
+        link: 'https://metruyencv.com/truyen/tu-hai-nhi-bat-dau-nhap-dao'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/795d6ab0397b11eeaa7cbb000222a685.jpg',
-        title: 'Câu chuyện về kinh nghiệm ăn kiêng và “tẩu hỏa nhập ma” thông tin dinh dưỡng',
-        brief: 'Ăn kiêng tỉnh táo, giảm cân khỏe mạnh',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/233b5a40320d11ee8d778fad1f424f14.png'
+        image_preview: 'https://static.cdnno.com/poster/tran-hoi-truong-sinh/150.jpg?1714986700',
+        title: 'Trận Hỏi Trường Sinh',
+        author: 'Nguyeen Van Thinh',
+        time: '4 phút trước',
+        link: 'https://metruyencv.com/truyen/tran-hoi-truong-sinh'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/728c1190382d11eea621efa4bc140a14.png',
-        title: 'Hai trận bao vây Smolensk - anh hùng ca bất tử và nghiệt ngã của số phận một vị tướng!',
-        brief: 'Trong bài này, chúng ta sẽ đề cập tới 2 trận đánh (cụ thể hơn là 2 cuộc bao vây) diễn ra cùng ở thành phố Smolensk...',
-        categories: 'LỊCH SỬ',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/c3e471d06d9311eaac2d25a1a1482589.jpg'
+        image_preview: 'https://static.cdnno.com/poster/cau-tha-thanh-thanh-nhan-tien-quan-trieu-ta-cham-ngua/150.jpg?1719031730',
+        title: 'Cẩu Thả Thành Thánh Nhân, Tiên Quan Triệu Ta Chăm Ngựa',
+        author: 'Nguyeen Van Thinh',
+        time: '5 phút trước',
+        link: 'https://metruyencv.com/truyen/cau-tha-thanh-thanh-nhan-tien-quan-trieu-ta-cham-ngua'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/3999a840384e11eead58070d1519998c.jpg',
-        title: '[Review sách] Bố già - Mario Puzo',
-        brief: '"Người đàn ông vĩ đại không được sinh ra đã vĩ đại mà anh ta trưởng thành một cách vĩ đại."',
-        categories: 'SÁCH',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/a81da8d04fbe11eda648595098f67504.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/gap-du-hoa-lanh-ky-ngo-cua-ta-co-tram-trieu-diem-quy-di/150.jpg?1719672571',
+        title: 'Gặp Dữ Hóa Lành: Kỳ Ngộ Của Ta Có Trăm Triệu Điểm Quỷ Dị',
+        author: 'Nguyeen Van Thinh',
+        time: '6 phút trước',
+        link: 'https://metruyencv.com/truyen/de-de-ta-la-thien-tuyen-chi-tu'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/f0628740338511eebb663dbe38264265.jpg',
-        title: 'Nhiếp Ảnh - Vì Cuộc Sống Đẹp Hơn Bạn Nghĩ',
-        brief: 'Mình học chụp ảnh từ năm 23 tuổi. Khi đó không phải vì mình',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/ea52570010d411eeaa1b1fd1b5ecd0d3.png'
+        image_preview: 'https://static.cdnno.com/poster/luan-hoi-nhac-vien/150.jpg?1620231490',
+        title: 'Luân Hồi Nhạc Viên',
+        author: 'Nguyeen Van Thinh',
+        time: '7 phút trước',
+        link: 'https://static.cdnno.com/poster/gap-du-hoa-lanh-ky-ngo-cua-ta-co-tram-trieu-diem-quy-di/150.jpg?1719672571'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/ad9ae4e0336f11ee8d41e3678c0b7dd6.png',
-        title: '[Tập hiểu sâu]: Vì sao Bạn luôn KHÔNG ỔN?',
-        brief: 'I’m OK - You’re OK, một tựa sách dành cho những ai luôn thấy bản thân Không-Ổn. Đặc biệt, với những ai đã trải qua...',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/001befb0738b11e98bc52d654e80e4ac.jpg'
+        image_preview: 'https://static.cdnno.com/poster/dai-dao-chi-thuong/150.jpg?1717907386',
+        title: 'Thôn Phệ Tinh Không 2 Khởi Nguyên Đại Lục',
+        author: 'Nguyeen Van Thinh',
+        time: '8 phút trước',
+        link: 'https://metruyencv.com/truyen/dai-dao-chi-thuong'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/93990d9033c111ee87a15707adbe74e2.jpg',
-        title: '[1W1C] Bạn tôi làm Kế toán',
-        brief: 'Lời mở đầu ...',
-        categories: 'NGƯỜI TRONG MUÔN NGHỀ',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/77fed73025bd11ed9d7ad9f089e43586.png'
+        image_preview: 'https://static.cdnno.com/poster/ta-mo-phong-truong-sinh-lo/150.jpg?1653010824',
+        title: 'Ta Mô Phỏng Trường Sinh Lộ',
+        author: 'Nguyeen Van Thinh',
+        time: '9 phút trước',
+        link: 'https://metruyencv.com/truyen/ta-mo-phong-truong-sinh-lo'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/c2f86c30334311ee9573f74454a84ba9.png',
-        title: 'Cửa hàng không tiện lợi',
-        brief: 'I’m OK - You’re OK, một tựa sách dành cho những ai luôn thấy bản thân Không-Ổn. Đặc biệt, với những ai đã trải qua...',
-        categories: 'LIFE STYLE',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/001befb0738b11e98bc52d654e80e4ac.jpg'
+        image_preview: 'https://static.cdnno.com/poster/mo-phong-tro-thanh-su-that-ta-tung-nhin-xuong-van-co-tue-nguyet/150.jpg?1718887216',
+        title: 'Mô Phỏng Trở Thành Sự Thật, Ta Từng Nhìn Xuống Vạn Cổ Tuế Nguyệt?',
+        author: 'Nguyeen Van Thinh',
+        time: '10 phút trước',
+        link: 'https://metruyencv.com/truyen/mo-phong-tro-thanh-su-that-ta-tung-nhin-xuong-van-co-tue-nguyet'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/d686eb50386611eeafd619148f101843.png',
-        title: 'Bình đẳng giới và vấn đề " Nữ quyền " tại Việt Nam.',
-        brief: 'Đây là hiện trạng về bình đẳng giới tính trên thế giới và góc nhìn cá nhân của chủ bài viết về vấn đề nữ quyền tại...',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/3ecea9e0380411eea621efa4bc140a14.jpeg',
+        image_preview: 'https://static.cdnno.com/poster/dai-tuyen-vo-thanh-tu-luyen-cong-them-diem-bat-dau/150.jpg?1698792935',
+        title: 'Đại Tuyên Võ Thánh',
+        author: 'Nguyeen Van Thinh',
+        time: '1 phút trước',
+        link: 'https://metruyencv.com/truyen/dai-tuyen-vo-thanh-tu-luyen-cong-them-diem-bat-dau'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/c2f86c30334311ee9573f74454a84ba9.png',
-        title: 'TỰ YÊU LẤY MÌNH TRƯỚC KHI YÊU CẬU ẤY',
-        brief: 'Mình muốn cậu xuất hiện trong mọi ngày bình thường hay đặc biệt của mình, từng giây từng phút đều để hơi thở của...',
-        categories: 'YÊU',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/c3a12280117011eda19057ce64d94446.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/tu-hai-nhi-bat-dau-nhap-dao/150.jpg?1714738581',
+        title: 'Từ hài nhi bắt đầu nhập đạo',
+        author: 'Nguyeen Van Thinh',
+        time: '2 phút trước',
+        link: 'https://metruyencv.com/truyen/tu-hai-nhi-bat-dau-nhap-dao'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/effde69037fa11eea621efa4bc140a14.png',
-        title: 'Hai mươi ba!',
-        brief: 'Vào cuối ngày đầu tiên của tuổi 23, tôi mới nhận ra rằng: 365 ngày ở tuổi 22 chính là một món quà!',
-        categories: 'THINKING OUT LOUD',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/96afa56057a411eda65a0b19be16580e.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/quang-am-chi-ngoai/150.jpg?1718153607',
+        title: 'Quang Âm Chi Ngoại',
+        author: 'Nguyeen Van Thinh',
+        time: '3 phút trước',
+        link: 'https://metruyencv.com/truyen/tu-hai-nhi-bat-dau-nhap-dao'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/795d6ab0397b11eeaa7cbb000222a685.jpg',
-        title: 'Câu chuyện về kinh nghiệm ăn kiêng và “tẩu hỏa nhập ma” thông tin dinh dưỡng',
-        brief: 'Ăn kiêng tỉnh táo, giảm cân khỏe mạnh',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/233b5a40320d11ee8d778fad1f424f14.png'
+        image_preview: 'https://static.cdnno.com/poster/tran-hoi-truong-sinh/150.jpg?1714986700',
+        title: 'Trận Hỏi Trường Sinh',
+        author: 'Nguyeen Van Thinh',
+        time: '4 phút trước',
+        link: 'https://metruyencv.com/truyen/tran-hoi-truong-sinh'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/728c1190382d11eea621efa4bc140a14.png',
-        title: 'Hai trận bao vây Smolensk - anh hùng ca bất tử và nghiệt ngã của số phận một vị tướng!',
-        brief: 'Trong bài này, chúng ta sẽ đề cập tới 2 trận đánh (cụ thể hơn là 2 cuộc bao vây) diễn ra cùng ở thành phố Smolensk...',
-        categories: 'LỊCH SỬ',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/c3e471d06d9311eaac2d25a1a1482589.jpg'
+        image_preview: 'https://static.cdnno.com/poster/cau-tha-thanh-thanh-nhan-tien-quan-trieu-ta-cham-ngua/150.jpg?1719031730',
+        title: 'Cẩu Thả Thành Thánh Nhân, Tiên Quan Triệu Ta Chăm Ngựa',
+        author: 'Nguyeen Van Thinh',
+        time: '5 phút trước',
+        link: 'https://metruyencv.com/truyen/cau-tha-thanh-thanh-nhan-tien-quan-trieu-ta-cham-ngua'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/3999a840384e11eead58070d1519998c.jpg',
-        title: '[Review sách] Bố già - Mario Puzo',
-        brief: '"Người đàn ông vĩ đại không được sinh ra đã vĩ đại mà anh ta trưởng thành một cách vĩ đại."',
-        categories: 'SÁCH',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/a81da8d04fbe11eda648595098f67504.jpeg'
+        image_preview: 'https://static.cdnno.com/poster/gap-du-hoa-lanh-ky-ngo-cua-ta-co-tram-trieu-diem-quy-di/150.jpg?1719672571',
+        title: 'Gặp Dữ Hóa Lành: Kỳ Ngộ Của Ta Có Trăm Triệu Điểm Quỷ Dị',
+        author: 'Nguyeen Van Thinh',
+        time: '6 phút trước',
+        link: 'https://metruyencv.com/truyen/de-de-ta-la-thien-tuyen-chi-tu'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/f0628740338511eebb663dbe38264265.jpg',
-        title: 'Nhiếp Ảnh - Vì Cuộc Sống Đẹp Hơn Bạn Nghĩ',
-        brief: 'Mình học chụp ảnh từ năm 23 tuổi. Khi đó không phải vì mình',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/ea52570010d411eeaa1b1fd1b5ecd0d3.png'
+        image_preview: 'https://static.cdnno.com/poster/luan-hoi-nhac-vien/150.jpg?1620231490',
+        title: 'Luân Hồi Nhạc Viên',
+        author: 'Nguyeen Van Thinh',
+        time: '7 phút trước',
+        link: 'https://static.cdnno.com/poster/gap-du-hoa-lanh-ky-ngo-cua-ta-co-tram-trieu-diem-quy-di/150.jpg?1719672571'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/ad9ae4e0336f11ee8d41e3678c0b7dd6.png',
-        title: '[Tập hiểu sâu]: Vì sao Bạn luôn KHÔNG ỔN?',
-        brief: 'I’m OK - You’re OK, một tựa sách dành cho những ai luôn thấy bản thân Không-Ổn. Đặc biệt, với những ai đã trải qua...',
-        categories: 'QUAN ĐIỂM - TRANH LUẬN',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/001befb0738b11e98bc52d654e80e4ac.jpg'
+        image_preview: 'https://static.cdnno.com/poster/dai-dao-chi-thuong/150.jpg?1717907386',
+        title: 'Thôn Phệ Tinh Không 2 Khởi Nguyên Đại Lục',
+        author: 'Nguyeen Van Thinh',
+        time: '8 phút trước',
+        link: 'https://metruyencv.com/truyen/dai-dao-chi-thuong'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/93990d9033c111ee87a15707adbe74e2.jpg',
-        title: '[1W1C] Bạn tôi làm Kế toán',
-        brief: 'Lời mở đầu ...',
-        categories: 'NGƯỜI TRONG MUÔN NGHỀ',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/77fed73025bd11ed9d7ad9f089e43586.png'
+        image_preview: 'https://static.cdnno.com/poster/ta-mo-phong-truong-sinh-lo/150.jpg?1653010824',
+        title: 'Ta Mô Phỏng Trường Sinh Lộ',
+        author: 'Nguyeen Van Thinh',
+        time: '9 phút trước',
+        link: 'https://metruyencv.com/truyen/ta-mo-phong-truong-sinh-lo'
     },
     {
-        image_preview: 'https://images.spiderum.com/sp-thumbnails/c2f86c30334311ee9573f74454a84ba9.png',
-        title: 'Cửa hàng không tiện lợi',
-        brief: 'I’m OK - You’re OK, một tựa sách dành cho những ai luôn thấy bản thân Không-Ổn. Đặc biệt, với những ai đã trải qua...',
-        categories: 'LIFE STYLE',
-        avatar: 'https://images.spiderum.com/sp-xs-avatar/001befb0738b11e98bc52d654e80e4ac.jpg'
+        image_preview: 'https://static.cdnno.com/poster/mo-phong-tro-thanh-su-that-ta-tung-nhin-xuong-van-co-tue-nguyet/150.jpg?1718887216',
+        title: 'Mô Phỏng Trở Thành Sự Thật, Ta Từng Nhìn Xuống Vạn Cổ Tuế Nguyệt?',
+        author: 'Nguyeen Van Thinh',
+        time: '10 phút trước',
+        link: 'https://metruyencv.com/truyen/mo-phong-tro-thanh-su-that-ta-tung-nhin-xuong-van-co-tue-nguyet'
     },
+    
 ]
 
 export const categories = [

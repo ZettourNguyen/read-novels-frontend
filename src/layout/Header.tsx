@@ -11,25 +11,25 @@ function Header() {
             boxShadow: 'rgb(0 0 0 / 8%) 0px 3px 8px'
         }}
     >
-        <div className="container h-[50px] flex items-center justify-between">
+        <div className="md:container h-[50px] flex items-center justify-between mx-2">
             <Link to={'/'}>
-            <div className='h-[25px] w-[110px] '>
+            <div className='h-[40px] w-[200px] '>
                 <img src={wideLogo} alt="" className='object-cover '/>
             </div>
             </Link>
             <div className='flex items-center'>
-                <div className='mr-[20px] w-[40px] h-[40px] flex items-center justify-center hover:bg-gray_light cursor-pointer'>
+                <div className='mr-[5px] w-[40px] h-[40px] flex items-center justify-center hover:bg-gray_light cursor-pointer'>
                     <GoSearch />
                 </div>
-                <Link to={'/'}>
+                {/* <Link to={'/'}>
                     <p className='text-base text-gray_text mr-[10px]'>Liên hệ</p>
-                </Link>
+                </Link> */}
                 <Link to={'/login'}>
-                    <p className='text-base text-gray_text ml-[10px]'>Đăng nhập</p>
+                    <p className='rounded-full ml-[20px] bg-sky_blue text-white p-[10px] px-[20px]'>Đăng nhập</p>
                 </Link>
-                <Link to={'/signup'}>
+                {/* <Link to={'/signup'}>
                 <button className="rounded-full ml-[20px] bg-sky_blue text-white p-[10px] px-[20px]">Đăng ký</button>
-                </Link>
+                </Link> */}
             </div>
         </div>
     </div>

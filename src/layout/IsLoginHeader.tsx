@@ -1,51 +1,52 @@
 import { GoSearch } from "react-icons/go";
 import {
-  BiCaretDown,
   BiLogoFacebook,
-  BiLogoSpotify,
-  BiLogoYoutube,
 } from "react-icons/bi";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { GiFeather, GiHamburgerMenu } from "react-icons/gi";
-import { HiOutlineMail } from "react-icons/hi";
 import wideLogo from "../assets/imgs/wideLogo.png";
 import { Link } from "react-router-dom";
-
+import { FaBookOpen } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import axiosInstance from "@/api";
 function IsLoginHeader() {
-  const categories = {
-    categories: [
-      "Quan điểm - Tranh luận",
-      "Khoa học - Công nghệ",
-      "Fitness",
-      "Giáo dục",
-      "Tâm lý học",
-      "Điêu khắc Kiến trúc Mỹ thuật",
-      "Lịch sử",
-      "Âm nhạc",
-      "Ô tô",
-      "Xe máy",
-      "Fashion",
-      "Nhiếp ảnh",
-      "The Brands",
-      "Sự kiện Spiderum",
-      "Thể thao",
-      "Phát triển bản thân",
-      "Chuyện thầm kín",
-      "Thinking Out Loud",
-      "Nấu ăn Ẩm thực",
-      "Sáng tác",
-      "Yêu",
-      "WTF",
-      "Du lịch",
-      "Movie",
-      "Sách",
-      "Life style",
-      "Góc nhìn thời sự",
-      "Người trong muôn nghề",
-      "Game",
-    ],
+  const user = useSelector((state: RootState) => state.auth.user);
+  const avatarUrl = user && user.avatar ? user.avatar : "https://staticvn.sangtacvietcdn.xyz/img/useravatar/default.png";
+
+
+  const [menuNavigate2, setMenuNavigate2] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null); // Sử dụng useRef để tham chiếu đến phần tử menu
+
+  const toggleOverlay = () => {
+    setMenuNavigate2(!menuNavigate2);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setMenuNavigate2(false);
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken')
+      await axiosInstance.post('/auth/logout', accessToken);
+      localStorage.clear()
+      window.location.reload()
+    } catch (error: any) {
+
+    } finally {
+
+    }
+
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
     <div
       className="pt-[10px]"
@@ -66,25 +67,12 @@ function IsLoginHeader() {
                 <BiLogoFacebook size={20} />
               </div>
             </Link>
+
             <Link to={"/"}>
-              <div className=" flex items-center justify-center h-[32px] w-[32px] mr-[8px]">
-                <BiLogoYoutube size={20} />
+              <div className="hidden lg:flex items-center justify-center text-[12px] text-[#92400E] font-sans font-medium bg-[#FFF7ED] rounded-full px-[10px] py-[4px]">
+                <div className="mr-2"><FaBookOpen /></div>
+                Kho truyện chữ
               </div>
-            </Link>
-            <Link to={"/"}>
-              <div className=" flex items-center justify-center h-[32px] w-[32px] mr-[8px]">
-                <BiLogoSpotify size={20} />
-              </div>
-            </Link>
-            <Link to={"/"}>
-              <a className="hidden lg:flex items-center justify-center text-[12px] text-[#92400E] font-sans font-medium bg-[#FFF7ED] rounded-full px-[10px] py-[4px]">
-                <img
-                  src="https://spiderum.com/assets/icons/shop.svg"
-                  alt=""
-                  className="mr-[8px]"
-                />
-                Spider's Shop
-              </a>
             </Link>
           </div>
         </div>
@@ -92,40 +80,73 @@ function IsLoginHeader() {
           <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
             <GoSearch size={20} />
           </div>
-          <div className="hidden lg:flex mr-[20px] w-[40px] h-[40px] items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
+          {/* <div className="hidden lg:flex mr-[20px] w-[40px] h-[40px] items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
             <HiOutlineMail size={20} />
-          </div>
+          </div> */}
           <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
             <IoMdNotificationsOutline size={20} />
           </div>
 
-          <Link to={"/viet-bai"}>
+          {/* <Link to={"/viet-bai"}>
             <div className="flex rounded-full px-[24px] border-[0.8px] border-[#c5c5c5] mx-[4px]">
               <div className=" flex items-centerm pr-[8px] text-[#969696] py-[8px]">
                 <GiFeather size={20} />
               </div>
               <button className="">Viết bài</button>
             </div>
-          </Link>
-          <div className="flex cursor-pointer mx-[4px] items-center">
-            <div className="rounded-full flex items-center">
+          </Link> */}
+          <div className="flex cursor-pointer mr-[16px] items-center" onClick={toggleOverlay}>
+            <div className="rounded-full flex items-center relative" ref={menuRef}>
               <img
                 className="h-[40px] rounded-full"
-                src="https://www.gravatar.com/avatar/c25a350a81a2537fe5dd789f17d06565?d=wavatar&f=y"
+                src={avatarUrl}
                 alt=""
               />
-            </div>
-            <div>
-              <div className="h-[10px] flex items-center justify-center text-[#646464]  cursor-pointer">
-                <BiCaretDown size={15} />
-              </div>
+              {menuNavigate2 && (
+                <div className="absolute top-[44px] left-[-125px] right-0 bg-white text-gray_text p-2"
+                  style={{ boxShadow: '0px 0px 20px 5px #61e4fc' }}>
+                  <ul>
+                    <div className="py-3 cursor-text text-center border-b border-gray">{user?.username}</div>
+                    <Link to={"/user/setup"}>
+                      <li className="py-3 px-1 hover:bg-[#efefef]">
+                        Thông tin cá nhân
+                      </li>
+                    </Link>
+
+                    <Link to={"/user/setup"}>
+                      <li className="py-3 px-1 hover:bg-[#efefef]">Cài đặt</li>
+                    </Link>
+                    <Link to={"/uploader"}>
+                      <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">
+                        Đăng truyện</li>
+                    </Link>
+                    <li className="py-3 px-1  hover:bg-[#efefef]">
+                      <a href="">Truyện đánh dấu</a>
+                    </li>
+                    <li className="py-3 px-1 hover:bg-[#efefef]">
+                      <a href="">Truyện theo dõi</a>
+                    </li>
+                    <li className="py-3 px-1 hover:bg-[#efefef]">
+                      <a href="">Truyện đã xem</a>
+                    </li>
+                    <li className="py-3 px-1 hover:bg-[#efefef]">
+                      <a href="">Truyện đã đăng</a>
+                    </li>
+
+                    <li onClick={handleLogout}
+                      className="py-3 px-1 border-gray border-t hover:bg-[#efefef] text-red">
+                      Đăng xuất</li>
+
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       {/* NAV ITEM TAGS */}
-      <div className="hidden lg:flex container h-[56px] items-center justify-between">
+      {/* <div className="hidden lg:flex container h-[56px] items-center justify-between">
         <ul className="flex items-center space-x-[90px] font-normal uppercase text-[12.8px] font-sans text-[#161616]">
           <li className="cursor-pointer hover:text-sky_blue_light">Quan điểm - Tranh luận</li>
           <li className="cursor-pointer hover:text-sky_blue_light">Khoa học - Công nghệ</li>
@@ -138,7 +159,7 @@ function IsLoginHeader() {
             <GiHamburgerMenu size={18} />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

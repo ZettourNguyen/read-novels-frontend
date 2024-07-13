@@ -15,9 +15,12 @@ const useAuth = () => {
                 email: email,
                 password: password
             })
+            console.log(response.data.accessToken)
             const data = response.data
-            const accessToken = data.access_token
-            localStorage.setItem('access_token', accessToken)
+            const accessToken = data.accessToken
+
+            localStorage.setItem('accessToken', accessToken)
+            loadUser()
             dispatch(login())
             history.push('/')
         } catch (error: any) {
@@ -26,7 +29,7 @@ const useAuth = () => {
     }
     const loadUser = async() => {
         try {
-            const res = await axiosInstance.get('/user/me')
+            const res = await axiosInstance.get('/auth/getUser')
             console.log('load user: ', res.data)
             if(res.data) {
                 dispatch(loadUserSuccess(res.data))
