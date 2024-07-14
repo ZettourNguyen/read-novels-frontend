@@ -5,7 +5,7 @@ import {
 import { IoMdNotificationsOutline } from "react-icons/io";
 import wideLogo from "../assets/imgs/wideLogo.png";
 import { Link } from "react-router-dom";
-import { FaBookOpen } from "react-icons/fa";
+import { FaBookOpen } from "react-icons/fa"; 
 import { useEffect, useRef, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
