@@ -29,7 +29,7 @@ export default function PublishChapter() {
         }
         const content = contentRef.current?.value || null
         if (!content) {
-            alert(`content IS NULL !!! `);
+            alert(`content IS NULL !!! `); 
             return
         }
         const data: IChapterInputI = {
