@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BsCamera } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import AvatarUpload from "./Upload";
+import { toast, ToastContainer } from "react-toastify";
 // const userName = useSelector((state: RootState) => state.auth.user)
 
 function AccountForm() {
@@ -35,42 +37,22 @@ function AccountForm() {
       overflow: prevStyle.maxHeight === "0" ? "visible" : "hidden",
     }));
   };
-  const avatarUrl = user && user.avatar ? user.avatar : "https://staticvn.sangtacvietcdn.xyz/img/useravatar/default.png";
   const [gender, setGender] = useState(user ? user.gender : 2);
 
-
+  const ConfirmClick = ()=>{
+    toast("Wow so easy!")
+  }
 
 
   return (
     <div>
-      {/* avatar  */}
       <div className="mb-6">
-        <div className="mt-10 flex ">
-          <form
-            className="bg-gray-500 hover:bg-opacity-90 h-32 w-32 rounded-full text-white"
-            method="post"
-            name="avatar"
-          >
-            <label
-              className="h-32 flex items-center justify-center cursor-pointer"
-              htmlFor="cmr"
-            >
-              <img
-                src={avatarUrl}
-                alt="Avatar"
-                className="h-full w-full rounded-full object-cover"
-                style={{ boxShadow: '0px 0px 20px 5px #61e4fc' }}
-              />
-              <BsCamera size={30} className="absolute" />
-            </label>
-            <input
-              type="file"
-              className="hidden"
-              id="cmr"
-              accept="image/png, image/gif, image/jpeg"
-              defaultValue={user && user.avatar ? user.avatar : ""}
-            />
-          </form>
+      <div className="mt-10 flex ">
+      <ToastContainer />
+        
+          <AvatarUpload></AvatarUpload>
+        {/* ============================================ */}
+
           <div className="px-8 flex-1">
             <div className="flex-row">
               <div className="flex-1">
@@ -175,8 +157,11 @@ function AccountForm() {
                     </div>
                   </div>
                   <div>
-                  <div className="bg-sky_blue_light_500 hover:bg-theme_color cursor-pointer text-white
-           shadow-md shadow-gray rounded-lg p-2 px-4">Sửa</div>
+                    <div className="bg-sky_blue_light_500 hover:bg-theme_color 
+                    cursor-pointer text-white 
+                    shadow-md shadow-gray rounded-lg p-2 px-4"
+                    onClick={ConfirmClick}>Sửa</div>
+                    
                   </div>
                 </div>
               </div>
@@ -184,7 +169,6 @@ function AccountForm() {
           </div>
         </div>
         <div className="flex justify-end">
-          
           <div className="bg-gray_light cursor-pointer text-gray_text
            shadow-md shadow-gray rounded-lg p-2 px-4 hidden">Hủy</div>
           <div className="bg-theme_color cursor-pointer text-white

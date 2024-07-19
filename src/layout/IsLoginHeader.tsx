@@ -80,21 +80,9 @@ function IsLoginHeader() {
           <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
             <GoSearch size={20} />
           </div>
-          {/* <div className="hidden lg:flex mr-[20px] w-[40px] h-[40px] items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
-            <HiOutlineMail size={20} />
-          </div> */}
           <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer">
             <IoMdNotificationsOutline size={20} />
           </div>
-
-          {/* <Link to={"/viet-bai"}>
-            <div className="flex rounded-full px-[24px] border-[0.8px] border-[#c5c5c5] mx-[4px]">
-              <div className=" flex items-centerm pr-[8px] text-[#969696] py-[8px]">
-                <GiFeather size={20} />
-              </div>
-              <button className="">Viết bài</button>
-            </div>
-          </Link> */}
           <div className="flex cursor-pointer mr-[16px] items-center" onClick={toggleOverlay}>
             <div className="rounded-full flex items-center relative" ref={menuRef}>
               <img
@@ -116,7 +104,7 @@ function IsLoginHeader() {
                     <Link to={"/user/setup"}>
                       <li className="py-3 px-1 hover:bg-[#efefef]">Cài đặt</li>
                     </Link>
-                    <Link to={"/uploader"}>
+                    <Link to={"/uploader/published"}>
                       <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">
                         Đăng truyện</li>
                     </Link>
@@ -145,21 +133,6 @@ function IsLoginHeader() {
         </div>
       </div>
 
-      {/* NAV ITEM TAGS */}
-      {/* <div className="hidden lg:flex container h-[56px] items-center justify-between">
-        <ul className="flex items-center space-x-[90px] font-normal uppercase text-[12.8px] font-sans text-[#161616]">
-          <li className="cursor-pointer hover:text-sky_blue_light">Quan điểm - Tranh luận</li>
-          <li className="cursor-pointer hover:text-sky_blue_light">Khoa học - Công nghệ</li>
-          <li className="cursor-pointer hover:text-sky_blue_light">Giáo dục</li>
-          <li className="cursor-pointer hover:text-sky_blue_light">Thể thao</li>
-          <li className="cursor-pointer hover:text-sky_blue_light">Sự kiện Spiderum</li>
-        </ul>
-        <div className="flex items-center justify-end text-[#969696]">
-          <button>
-            <GiHamburgerMenu size={18} />
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 }

@@ -9,6 +9,7 @@ const useAuth = () => {
     
     useEffect(()=>{
     },[])
+    
     const handlelogin = async (email: string, password: string) => {
         try {
             const response = await axiosInstance.post('/auth/login',{
@@ -30,7 +31,6 @@ const useAuth = () => {
     const loadUser = async() => {
         try {
             const res = await axiosInstance.get('/auth/getUser')
-            console.log('load user: ', res.data)
             if(res.data) {
                 dispatch(loadUserSuccess(res.data))
             }

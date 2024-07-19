@@ -9,9 +9,9 @@ interface User {
     avatar: string,
     birthday: string,
     gender: number,
+    blacklist:string,
     confirmer: boolean,
     createAt: string,
-    updateAt: string
 }
 
 interface AuthState {

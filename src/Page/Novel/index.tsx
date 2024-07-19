@@ -4,22 +4,32 @@ import { useParams } from 'react-router-dom'
 import NoverDetailsCard from '@/components/Card/NovelDetail';
 import NovelDetailsChapters from '@/components/Card/NovelDetailsChapters';
 import NovelComments from '@/components/Card/NovelComments';
-interface NovelProps {
+import { useEffect } from 'react';
 
-}
 function Novel() {
-    const { storyName } = useParams();
+    const { novelId } = useParams<{ novelId: string }>();
+    const novelIdNumber = Number(novelId);
+    if (isNaN(novelIdNumber)) {
+        return <div>Error: Invalid novel ID</div>;
+    }
 
+
+    useEffect(() => {
+        // Cuộn lên đầu trang mỗi khi component được mount
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div>
-            <h1>{storyName?.replace(/-/g, ' ')}</h1>
             <Banner />
             <div className='md:container mt-6'>
-            <NoverDetailsCard/>
-            <NovelDetailsChapters/>
-            <Banner />
-
-            <NovelComments/>
+                <div className='mt-3'>
+                    <NoverDetailsCard novelId={+novelIdNumber} />
+                </div>
+                <div className='mb-4'>
+                    <NovelDetailsChapters novelId={+novelIdNumber} />
+                </div>
+                <Banner />
+                <NovelComments />
             </div>
         </div>
     );

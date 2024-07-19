@@ -5,6 +5,8 @@ import NewFeed from '@/components/Home/NewFeed'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import HistoryCard from '@/components/Card/HistoryCard'
+import { ICardNovelsI, useRandomNovels } from '@/hooks/useNovel'
+import NovelCard from '@/components/Card/NovelCard'
 
 const popularList: Array<PopularCardProps> = [
     {
@@ -56,13 +58,15 @@ const popularList: Array<PopularCardProps> = [
     }
 ]
 function HomePage() {
-    const auth = useSelector((state: RootState) => state.auth)
+    const { randomNovels, loading, error } = useRandomNovels()
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className='bg-[ #FCFCFA]'>
             {/* {auth.isLogin ? <div /> : <Banner />} */}
-            <Banner/>
+            <Banner />
             <div className='md:container'>
                 <p className="text-base text-theme_color font-semibold py-4 mx-2">TRUYỆN VỪA ĐỌC</p>
                 <HistoryCard />
@@ -76,8 +80,6 @@ function HomePage() {
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div className='my-10'>
                 <Banner />
@@ -87,21 +89,12 @@ function HomePage() {
                     <p className="text-base font-semibold text-theme_color border-r-[1px] border-r-solid border-r-[#e1e1e1] pe-2">
                         TRUYỆN NGẪU NHIÊN
                     </p>
-                    {/* <p className="text-base text-gray_text ml-2 cursor-pointer">Xem TOP 10 bài viết</p> */}
                 </div>
                 <div>
-                    {/* <div className="flex justify-between flex-wrap">
-                            {
-                                [0, 1, 2, 3].map(item => (
-                                    <Popular2 key={item.toString()} />
-                                ))
-                            }
-                        </div> */}
-
                     <div className='my-2'>
                         <div className="flex gap-10 flex-wrap">
-                            {popularList.map((item: PopularCardProps, index: number) => (
-                                <PopularCard item={item} key={index.toString()} />
+                            {randomNovels.map((item: ICardNovelsI, index: number) => (
+                                <NovelCard item={item} key={index.toString()} />
                             ))}
                         </div>
                     </div>

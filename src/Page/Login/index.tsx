@@ -1,13 +1,14 @@
 import useAuth from "@/hooks/useAuth";
 import React, { useState } from "react";
 import Logo from "@/assets/imgs/logoKTC.png"
+import { Link } from "react-router-dom";
 
 
 function LoginForm() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [rePassword, setRePassword] = useState<string>("");
-    const [isRegistering, setIsRegistering] = useState<boolean>(false); 
+    const [isRegistering, setIsRegistering] = useState<boolean>(false);
     const { handlelogin } = useAuth()
 
     const handleRegisterClick = (e: React.FormEvent) => {
@@ -40,13 +41,12 @@ function LoginForm() {
         <div className="w-[100vw] h-[100vh] flex items-center justify-center">
             <div className=" sm:w-full sm:max-w-sm">
                 <div className="mb-4">
-                    <a href="http://localhost:5173/">
+                    <Link to={'/'}>
                         <img
                             className="mx-auto h-30 w-40"
                             src={Logo}
                             alt="Workflow"
-                        />
-                    </a>
+                        /></Link>
                 </div>
 
                 <form className="" onSubmit={handleRegisterClick}>
@@ -84,13 +84,13 @@ function LoginForm() {
                         <button type="submit" className="bg-gray_border
                          hover:bg-sky_blue_light text-center hover:text-white 
                          py-2 w-full"
-                         onClick={() => setIsRegistering(true)}>
+                            onClick={() => setIsRegistering(true)}>
                             Đăng ký
                         </button>
                         <button type="button" className="bg-sky_blue_light hover:bg-sky_blue_light_500 text-center
                          text-white py-2 w-full"
-                         onClick={handleLoginClick}
-                            >
+                            onClick={handleLoginClick}
+                        >
                             Đăng nhập
                         </button>
 

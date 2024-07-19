@@ -1,52 +1,70 @@
+import { useArrChaptersDetails } from "@/hooks/useChapters";
+import { NoverDetailsCardProps } from "./NovelDetail";
+import { useState } from "react";
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
+import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
 
 
+export default function NovelDetailsChapters({ novelId }: NoverDetailsCardProps) {
+    const [showAll, setShowAll] = useState(false);
 
-export default function NovelDetailsChapters() {
+    const { ArrChapters, loading, error } = useArrChaptersDetails(novelId)
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    const numberOfShowItem = 12
+    const displayedChapters = showAll ? ArrChapters : ArrChapters.slice(0, numberOfShowItem); // 6 hàng, 1 hàng 3 cái
+
+    // 
     return (
         <div>
             <div className='bg-[#E4DECE] text-sm px-4 py-1'>
                 CHƯƠNG MỚI
             </div>
-            <div className='border-x-[2px] border-x-gray_light px-3 text-sm'>
-                <div className="border-b-[2px] border-b-gray_light p-2 hover:bg-gray_hover ">
-                    CHƯƠNG MỚI
-                </div><div className="border-b-[2px] border-b-gray_light p-2 hover:bg-gray_hover ">
-                    CHƯƠNG MỚI
-                </div><div className="p-2 hover:bg-gray_hover ">
-                    CHƯƠNG MỚI
-                </div>
+            <div className=' border-x-[2px] border-x-gray_light px-3 text-sm'>
+                {ArrChapters.slice(-3).map(chapter => (
+                    <a href={`list/${chapter.id}`} key={chapter.id}>
+                        <div className="flex justify-between border-b-[2px] border-b-gray_light p-2 hover:bg-gray_hover ">
+                            <div>
+                            {chapter.title}
+                            </div>
+                            <div>
+                             {formatDistanceToNow(new Date(chapter.updatedAt), { addSuffix: true, locale: vi })}
+                            </div>
+                        </div>
+
+                    </a>
+                ))}
             </div>
 
             <div className='bg-[#E4DECE] text-sm px-4 py-1'>
                 MỤC LỤC
             </div>
-            <div className='flex-wrap grid grid-cols-3 
-            border-x-[2px] border-x-gray_light px-3 text-sm'>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
+            <div>
+                <div className='flex-wrap grid grid-cols-3 border-x-[2px] border-x-gray_light px-3 text-sm'>
+                    {displayedChapters.map(chapter => (
+                        <a href={`list/${chapter.id}`} key={chapter.id}>
+                            <div className="p-2 py-3 hover:bg-gray_hover truncate">
+                                {chapter.title}
+                            </div>
+                        </a>
+                    ))}
                 </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-                <div className="p-2 hover:bg-gray_hover truncate">
-                    CHƯƠNG 1: Nơi này có cầm radio dự báo thời tiết Vân Thần, có tay cầm điện côn Quỷ Thần. Có cõng súng phun lửa Hỏa Thần, cầm súng ngắn xem như Chưởng Tâm Lôi đạo môn chân nhân, có trông coi đập lớn Trường Giang Long Vương.
-                </div>
-
-
-                
-
+                {/* 6 hàng, 1 hàng 3 cái */}
+                {ArrChapters.length > numberOfShowItem && (
+                    <div className="flex justify-center p-1 bg-[#ECEAEA]">
+                        
+                        <button
+                        onClick={() => setShowAll(!showAll)}
+                        className="flex items-center gap-0.5  hover:underline"
+                    >
+                        {showAll? <IoIosArrowUp />:<IoIosArrowDown />}
+                        {showAll ? 'Thu gọn' : 'Mở rộng'}
+                    </button>
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -10,6 +10,9 @@ import { INovelInputI } from "../Novel/Novel.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useCreateNovel } from "@/hooks/useNovel";
+import actionNotification from "@/components/NotificationState/Toast";
+
+export const defaultImage = 'https://static.sangtacvietcdn.xyz/img/bookcover256.jpg'
 
 export default function NewNovel() {
     const [selectedTag, setSelectedTag] = useState<TagProps[]>([]);
@@ -60,12 +63,12 @@ export default function NewNovel() {
     const handleNextButtonClick = async () => {
         const novelName = novelNameRef.current?.value;; // Cập nhật giá trị state khi có sự thay đổi
         if (!novelName) {
-            alert(`Vui lòng nhập tên truyện `);
+            actionNotification("Bạn chưa nhập Tên truyện", 'warning')
             return;
         }
         const authorName = authorNameRef.current?.value || null
         if (categoryId == null) {
-            alert(`CATEGORY IS NULL !!! `);
+            actionNotification("Bạn chưa nhập Thể loại", 'warning')
             return
         }
         const idString = user?.id.toString() || '0'; // Ép kiểu sang chuỗi và xử lý giá trị null
@@ -73,7 +76,7 @@ export default function NewNovel() {
         const novelInput: INovelInputI = {
             data: {
                 title: `${novelNameRef.current?.value}`,
-                image: `https://drive.google.com/file/d/11Mh3U-GoIRIU3aOEWzQd0C-ICitEqrs6/view?usp=drive_link`,
+                image: defaultImage,
                 banner: null,
                 state: "ongoing",
                 description: `${introductionRef.current?.value}`,
@@ -84,7 +87,7 @@ export default function NewNovel() {
             tagsId: selectedTagIds
         };
         await createNovelAPI(novelInput) 
-        alert('Tiểu thuyết đã được tạo thành công!');
+        actionNotification("Tiểu thuyết đã được tạo thành công!", 'success')
     };
 
 
