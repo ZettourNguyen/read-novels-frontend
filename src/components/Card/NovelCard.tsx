@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom'
 
 
 function NovelCard({ item }: { item: ICardNovelsI }) {
-
-
-
     return (
         <div className='mw-[100%] flex gap-x-[20px] lg:flex-row sm:flex-row lg:w-[47%] sm:w-[100%]'>
             <Link to={`novel/${item.id}`} className='img-preview sm:w-[27%] cursor-pointer w-[20%]'>
@@ -23,22 +20,27 @@ function NovelCard({ item }: { item: ICardNovelsI }) {
 
                 </div>
 
-                <Link to={`category/${item.categoryId}`} className='flex mt-1'>
+                <Link to={`list/category/${item.categoryId}`} className='flex mt-1'>
                     <p className="border border-theme_color-300 rounded-md cursor-pointer 
                     p-1 text-xs font-medium text-dark_gold">{item.categoryName}</p>
                 </Link>
-
-                {/* poster */}
-                <div className='flex justify-between items-center'>
-                    <Link to={`user/${item.posterId}`} className='flex items-center'
-                    >
-                        <div className='owner w-[20px] h-[20px]'>
-                            <img src={userIcon} alt="" className='w-100 rounded-full h-100' />
-                        </div>
-                        <p className="text-sm ml-2 cur font-semibold hover:text-theme_color">{item.posterName}</p>
-                    </Link>
+                <div className='flex'>
+                <div className='owner w-[20px] h-[20px]'>
+                        <img src={userIcon} alt="" className='w-100 rounded-full h-100' />
+                    </div>
+                <div className='flex-wrap'>
                     
+                    {item.author.map((author) => (
+                        <div key={author.id} className='flex justify-between hover:underline items-center'>
+                            <Link to={`list/author/${author.id}`} className='flex items-center'>
+
+                                <p className="text-sm ml-2 cur font-semibold hover:text-theme_color">{author.nickname}</p>
+                            </Link>
+                        </div>
+                    ))}
                 </div>
+                </div>
+
             </div>
         </div>
     )

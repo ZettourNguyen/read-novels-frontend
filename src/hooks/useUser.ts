@@ -1,6 +1,9 @@
 import axiosInstance from '@/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
+import { IRoleI } from './useRole';
 
 interface avatarUpdate {
     id: string
@@ -30,4 +33,45 @@ export const useUser = () => {
     }
 
     return { loading, error, uploadAvatarAPI };
+};
+
+interface IUserListI {
+    id: number;
+    username: string;
+    email: string;
+    birthday: Date;
+    gender: number;
+    blacklist: boolean;
+    confirmed: boolean;
+    createdAt: Date;
+}
+
+export const useUserList = () => {
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    const [users, setUsers] = useState<IUserListI[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchUsers = async () => {
+        if (user) {
+
+            try {
+                const response = await axiosInstance.get(`/auth/user/${user.id}`);
+                setUsers(response.data);
+            } catch (error: any) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+    };
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+
+
+    return { users, loading, error, refreshUserList: fetchUsers};
 };

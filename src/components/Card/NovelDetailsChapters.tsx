@@ -9,8 +9,8 @@ import { IoIosArrowUp } from "react-icons/io";
 
 export default function NovelDetailsChapters({ novelId }: NoverDetailsCardProps) {
     const [showAll, setShowAll] = useState(false);
-
-    const { ArrChapters, loading, error } = useArrChaptersDetails(novelId)
+    const publishedOnly = true // cái này chỉ lấy ispublish = true
+    const { ArrChapters, loading, error } = useArrChaptersDetails({novelId, publishedOnly})
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -19,13 +19,13 @@ export default function NovelDetailsChapters({ novelId }: NoverDetailsCardProps)
 
     // 
     return (
-        <div>
+        <div className="bg-white">
             <div className='bg-[#E4DECE] text-sm px-4 py-1'>
                 CHƯƠNG MỚI
             </div>
             <div className=' border-x-[2px] border-x-gray_light px-3 text-sm'>
-                {ArrChapters.slice(-3).map(chapter => (
-                    <a href={`list/${chapter.id}`} key={chapter.id}>
+                {ArrChapters.slice(-3).reverse().map(chapter => (
+                    <a href={`${novelId}/${chapter.id}`} key={chapter.id}>
                         <div className="flex justify-between border-b-[2px] border-b-gray_light p-2 hover:bg-gray_hover ">
                             <div>
                             {chapter.title}
@@ -45,8 +45,9 @@ export default function NovelDetailsChapters({ novelId }: NoverDetailsCardProps)
             <div>
                 <div className='flex-wrap grid grid-cols-3 border-x-[2px] border-x-gray_light px-3 text-sm'>
                     {displayedChapters.map(chapter => (
-                        <a href={`list/${chapter.id}`} key={chapter.id}>
-                            <div className="p-2 py-3 hover:bg-gray_hover truncate">
+                        <a href={`${novelId}/${chapter.id}`} key={chapter.id}>
+                            <div className="p-2 py-3 hover:bg-gray_hover
+                             hover:border-b-sky_blue_light hover:border-b-[1px] truncate">
                                 {chapter.title}
                             </div>
                         </a>

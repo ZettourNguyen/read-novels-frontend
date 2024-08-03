@@ -1,13 +1,19 @@
 import axiosInstance from '@/api';
+import { NovelFeedCardProps } from '@/components/Card/FeedCard';
+import actionNotification from '@/components/NotificationState/Toast';
+import { LoaddingListProps, NovelCardFull } from '@/Page/ListNovels';
 
-import { INovelInputI } from '@/Page/Novel/Novel.interface';
+import { INovelI, INovelInputI } from '@/Page/Novel/Novel.interface';
 import { useEffect, useState } from 'react';
+import { IAuthorI } from './useAuthor';
 
 export interface IChapterInputI {
     title: string,
     content: string,
     novelId: number,
-    index: number
+    index: number,
+    isPublish: boolean;
+    chapterLength: number;
 }
 export interface ICardNovelsI {
     id: number,
@@ -21,12 +27,15 @@ export interface ICardNovelsI {
     posterId: string,
     posterName: string,
     posterAvatar: string,
+    author: IAuthorI[]
 }
 
 export interface ITagI {
     id: number;
     name: string;
 }
+
+
 
 export interface INovelDetailsI {
     id: number;
@@ -36,8 +45,7 @@ export interface INovelDetailsI {
     description: string;
     categoryId: number;
     categoryName: string;
-    authorId: number;
-    authorName: string;
+    author: IAuthorI[]
     posterId: number;
     posterName: string;
     posterAvatar: string;
@@ -50,11 +58,23 @@ export interface INovelDetailsI {
     numberSavedBookmark: number;
     tags: ITagI[];
 }
+export interface UpdateNovelDTO {
+    id: number
+    title?: string;
+    image?: string;
+    banner?: string;
+    state?: string;
+    description?: string;
+    posterId?: number;
+    tagsId?: number[]
+    categoryId?: number
+}
 
-export const useCreateNovel = () => {
-
+export const useNovel = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
+
 
     const createNovelAPI = async (novelData: INovelInputI) => {
         try {
@@ -63,12 +83,29 @@ export const useCreateNovel = () => {
 
             const response = await axiosInstance.post('/novel', novelData);
             console.log('Novel created successfully:', response.status);
-
+            return response.data
             setLoading(false);
         } catch (error) {
             console.error('Error creating novel:', error);
             setError('Đã xảy ra lỗi khi tạo tiểu thuyết');
             alert(error)
+            setLoading(false);
+            throw error;
+        }
+    };
+
+    const updateNovelAPI = async (novelData: UpdateNovelDTO) => {
+        try {
+            const { id, ...updateData } = novelData;
+            setLoading(true);
+            const response = await axiosInstance.put(`/novel/${novelData.id}`, updateData);
+            console.log('Novel update successfully:', response.status);
+            actionNotification(`Novel update successfully`, `success`)
+            setLoading(false);
+            return response.data
+        } catch (error) {
+            console.error('Error creating novel:', error);
+            actionNotification('Đã xảy ra lỗi khi cập nhật tiểu thuyết', 'error');
             setLoading(false);
             throw error;
         }
@@ -90,65 +127,69 @@ export const useCreateNovel = () => {
             throw error;
         }
     }
-    return { createNovelAPI, createChapterAPI, loading, error };
+    return { createNovelAPI, updateNovelAPI, createChapterAPI, loading, error };
 };
 
 export interface NovelPublishedProps {
-    id: number;
-    title: string;
-    createdAt: string;
-    chapters: number;
+    id: number,
+    title: string,
+    state: string,
+    createdAt: string,
+    updatedAt: string,
+    chapters: number,
+    posterId: number,
+    posterName: string
 }
 
 export const useNovelsByPoster = (posterId: any) => {
     const [novels, setNovels] = useState<NovelPublishedProps[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    useEffect(() => {
+
+    const fetchMyPublishedNovels = async () => {
         if (!posterId) return;
 
-        const fetchMyPublishedNovels = async () => {
-            try {
-                const response = await axiosInstance.get(`/novel/me/${posterId}`);
-                setNovels(response.data);
-                console.log(novels)
-            } catch (error: any) {
-                setError(error.message || 'An error occurred');
-            } finally {
-                setLoading(false);
-            }
-        };
+        try {
+            const response = await axiosInstance.get(`/novel/me/${posterId}`);
+            setNovels(response.data);
+            console.log(novels)
+        } catch (error: any) {
+            setError(error.message || 'An error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
 
         fetchMyPublishedNovels();
     }, [posterId]);
 
-    return { novels, loading, error };
+    return { novels, loading, error, refetch: fetchMyPublishedNovels };
 };
 
 export const useRandomNovels = () => {
     const [randomNovels, setRandomNovels] = useState<ICardNovelsI[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const fetchMyPublishedNovels = async () => {
+        try {
+            const response = await axiosInstance.get(`/novel/random/6`);
+            setRandomNovels(response.data);
+        } catch (error: any) {
+            setError(error.message || 'An error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchMyPublishedNovels = async () => {
-            try {
-                const response = await axiosInstance.get(`/novel/random/6`);
-                setRandomNovels(response.data);
-                console.log(randomNovels)
-            } catch (error: any) {
-                setError(error.message || 'An error occurred');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMyPublishedNovels();
+            fetchMyPublishedNovels();
     }, []);
 
-    return { randomNovels, loading, error };
+    return { randomNovels, loading, error, refetch:fetchMyPublishedNovels };
 };
 
-export const useNovelDetails = (novelId : number) => {
+export const useNovelDetails = (novelId: number) => {
+    console.log(novelId)
     const [novelDetails, setNovelDetails] = useState<INovelDetailsI>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -157,7 +198,31 @@ export const useNovelDetails = (novelId : number) => {
             try {
                 const response = await axiosInstance.get(`/novel/${novelId}`);
                 setNovelDetails(response.data);
-                console.log(novelDetails)
+            } catch (error: any) {
+                setError(error.message || 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMyPublishedNovels();
+    }, [novelId]);
+
+    return { novelDetails, loading, error };
+};
+
+
+export const useNovelInfor = (novelId: number) => {
+    const [novelInfor, setNovelInfor] = useState<INovelI>();
+    const [loadingInfor, setLoading] = useState(true);
+    const [errorInfor, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchMyPublishedNovels = async () => {
+            try {
+                const response = await axiosInstance.get(`/novel/id/${novelId}`);
+                setNovelInfor(response.data);
+                console.log(novelInfor)
+                setLoading(false)
             } catch (error: any) {
                 setError(error.message || 'An error occurred');
             } finally {
@@ -168,5 +233,98 @@ export const useNovelDetails = (novelId : number) => {
         fetchMyPublishedNovels();
     }, []);
 
-    return { novelDetails, loading, error };
+    return { novelInfor, loadingInfor, errorInfor };
+};
+
+export const useLastNovels = () => {
+    const [novelsLast, setNovelInfor] = useState<NovelFeedCardProps[]>([]);
+    const [loadingInfor, setLoading] = useState(true);
+    const [errorInfor, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchUseLastNovesl = async () => {
+            try {
+                const response = await axiosInstance.get(`/novel/getLast`);
+                setNovelInfor(response.data);
+                console.log(novelsLast)
+                setLoading(false)
+            } catch (error: any) {
+                setError(error.message || 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUseLastNovesl();
+    }, []);
+
+    return { novelsLast, loadingInfor, errorInfor };
+};
+
+export const useListNovels = ({ type, id }: LoaddingListProps) => {
+    const [novelsList, setListNovel] = useState<NovelCardFull[]>([]);
+    const [loadingList, setLoading] = useState(true);
+    const [errorList, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchUseLastNovesl = async () => {
+            try {
+                const response = await axiosInstance.get(`/novel/${type}/${id}`);
+                setListNovel(response.data);
+                console.log(novelsList)
+                setLoading(false)
+            } catch (error: any) {
+                setError(error.message || 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUseLastNovesl();
+    }, []);
+
+    return { novelsList, loadingList, errorList };
+};
+
+export const useAllNovel = () => {
+    const [novelsAll, setListNovel] = useState<NovelPublishedProps[]>([]);
+    const [loadingAll, setLoading] = useState(true);
+    const [errorAll, setError] = useState<string | null>(null);
+    const fetchUseAllNovesl = async () => {
+        try {
+            const response = await axiosInstance.get(`/novel/`);
+            setListNovel(response.data);
+            console.log(novelsAll)
+            setLoading(false)
+        } catch (error: any) {
+            setError(error.message || 'An error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchUseAllNovesl();
+    }, []);
+
+    return { novelsAll, loadingAll, errorAll, refetch: fetchUseAllNovesl };
+};
+
+export const useMostFollowNovels = () => {
+    const [FollowNovels, setRandomNovels] = useState<ICardNovelsI[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchMyPublishedNovels = async () => {
+            try {
+                const response = await axiosInstance.get(`/novel/follow/6`);
+                setRandomNovels(response.data);
+            } catch (error: any) {
+                setError(error.message || 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMyPublishedNovels();
+    }, []);
+
+    return { FollowNovels, loading, error };
 };

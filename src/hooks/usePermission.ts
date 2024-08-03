@@ -1,0 +1,101 @@
+import axiosInstance from "@/api";
+import { RootState } from "@/store/store";
+import { useState, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
+
+export interface IPermissionI {
+    id: number;
+    name: string;
+    description: string;
+}
+
+export const useUserPermission = () => {
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    const [permissions, setPermissions] = useState<IPermissionI[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchPermissions = async () => {
+            if (user?.id) {
+                try {
+                    const response = await axiosInstance.get(`/role/${user.id}`);
+                    setPermissions(response.data[0]); // Giả sử dữ liệu nằm trong mảng đầu tiên
+                } catch (error: any) {
+                    setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+                setError('Người dùng không hợp lệ');
+            }
+        };
+
+        fetchPermissions();
+    }, [user?.id]);
+
+    return { permissions, loading, error };
+};
+
+export const useRolePermission = (roleId: string | undefined) => {
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    const [permissions, setPermissions] = useState<IPermissionI[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [shouldRefetch, setShouldRefetch] = useState(false);
+
+    const fetchPermissions = useCallback(async () => {
+        if (user?.id && roleId) {
+            try {
+                const response = await axiosInstance.get(`/role/permission/${user.id}`, {
+                    params: { roleId }
+                });
+                setPermissions(response.data);
+            } catch (error: any) {
+                setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+            setError('Người dùng không hợp lệ hoặc roleId không hợp lệ');
+        }
+    }, [user?.id, roleId, shouldRefetch]);
+
+    useEffect(() => {
+        fetchPermissions();
+    }, [fetchPermissions]);
+
+    return { permissions, loading, error, refetch: () => setShouldRefetch(prev => !prev) };
+};
+export const useListPermission = () => {
+    const user = useSelector((state: RootState) => state.auth.user);
+    const [permissionsList, setPermissionsList] = useState<IPermissionI[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchPermissions = async () => {
+            if (user?.id) {
+                try {
+                    const response = await axiosInstance.get(`/role/permission-list/${user.id}`, )
+                    setPermissionsList(response.data); 
+                } catch (error: any) {
+                    setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+                setError('Người dùng không hợp lệ');
+            }
+        };
+
+        fetchPermissions();
+    }, [user?.id]);
+
+    return { permissionsList, loading, error };
+};

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { BsCamera } from "react-icons/bs";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import AvatarUpload from "./Upload";
 import { toast, ToastContainer } from "react-toastify";
 // const userName = useSelector((state: RootState) => state.auth.user)
 
-function AccountForm() {
+function AccountPage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const [days, setDays] = useState([...Array(31).keys()].map((day) => day + 1));
   const months = [
@@ -327,4 +326,4 @@ function AccountForm() {
     </div>
   );
 }
-export default AccountForm
+export default AccountPage

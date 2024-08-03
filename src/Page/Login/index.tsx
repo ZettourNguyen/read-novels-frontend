@@ -2,6 +2,9 @@ import useAuth from "@/hooks/useAuth";
 import React, { useState } from "react";
 import Logo from "@/assets/imgs/logoKTC.png"
 import { Link } from "react-router-dom";
+import Popup from "@/components/Popup";
+import history from "@/router/history";
+import { ToastContainer } from "react-toastify";
 
 
 function LoginForm() {
@@ -9,36 +12,25 @@ function LoginForm() {
     const [password, setPassword] = useState<string>("");
     const [rePassword, setRePassword] = useState<string>("");
     const [isRegistering, setIsRegistering] = useState<boolean>(false);
-    const { handlelogin } = useAuth()
+    const { handlelogin, handleRegister } = useAuth()
 
     const handleRegisterClick = (e: React.FormEvent) => {
         e.preventDefault();
         if (password === rePassword) {
-            console.log("start init handleRegisterClick")
-            console.log("Email:", email);
-            console.log("Password:", password);
+            localStorage.setItem('showPopup', 'register');
+            handleRegister(email, password)
         }
-
-
 
     };
 
     const handleLoginClick = () => {
-        // Xử lý sự kiện khi click vào nút Đăng nhập
-        console.log("Đăng nhập");
-
-        console.log("Email:", email);
-        console.log("Password:", password);
-        console.log("rePassword:", rePassword);
-
         handlelogin(email, password)
-
-
     };
 
 
     return (
         <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+            <ToastContainer></ToastContainer>
             <div className=" sm:w-full sm:max-w-sm">
                 <div className="mb-4">
                     <Link to={'/'}>
@@ -84,13 +76,17 @@ function LoginForm() {
                         <button type="submit" className="bg-gray_border
                          hover:bg-sky_blue_light text-center hover:text-white 
                          py-2 w-full"
-                            onClick={() => setIsRegistering(true)}>
+                            onClick={() => setIsRegistering(true)}
+                        >
+
                             Đăng ký
                         </button>
+                       
                         <button type="button" className="bg-sky_blue_light hover:bg-sky_blue_light_500 text-center
                          text-white py-2 w-full"
                             onClick={handleLoginClick}
                         >
+
                             Đăng nhập
                         </button>
 

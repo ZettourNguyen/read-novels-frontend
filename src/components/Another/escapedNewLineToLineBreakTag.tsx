@@ -11,7 +11,7 @@ const EscapedNewLineToLineBreakTag: React.FC<Props> = ({ string }) => {
       {string.split('\n').map((item, index) => (
         <React.Fragment key={index}>
           {index > 0 && <br/>} {/* Thêm <br> sau dòng thứ nhất */}
-          <p>{item}</p>
+          <p className='break-words'>{item}</p>
         </React.Fragment>
       ))}
     </>

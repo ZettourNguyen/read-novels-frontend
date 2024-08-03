@@ -41,6 +41,9 @@ export default {
         'home-banner': "url('/src/assets/imgs/banner-1.png')",
         'text-linear': 'linear-gradient(90deg,#262443 0,#2a99d5)'
       },
+      boxShadow: {
+        'custom-blue': '0px 0px 20px 5px rgb(97, 228, 252)',
+      },
       container: {
         center: true,
         padding: {

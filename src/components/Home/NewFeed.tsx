@@ -1,12 +1,19 @@
-import { categories, newsFeedData } from '@/constant'
-import React, { useState } from 'react'
-import NewsFeedCard from '../Card/FeedCard'
-import ContactForm from './ContactForm'
-import { Pagination } from '@mantine/core';
+import { useState } from 'react'
+import NovelFeedCard, { NovelFeedCardProps } from '../Card/FeedCard'
+import { useCategoryList } from '@/hooks/userCategoryList';
+import { Link } from 'react-router-dom';
+import { useLastNovels } from '@/hooks/useNovel';
 const borderTab = 'border-b-[3px] border-b-solid border-b-sky_blue_light '
 
 function NewFeed() {
     const [tab, setTab] = useState(0)
+
+    const { categories } = useCategoryList();
+
+    const { novelsLast, loadingInfor, errorInfor } = useLastNovels()
+    
+    if(errorInfor) return <div>{errorInfor}</div>
+
     return (
         <div className="flex py-10 lg:flex-row xs:flex-col-reverse">
             <div className='lg:w-2/3 xs:w-full'>
@@ -22,7 +29,7 @@ function NewFeed() {
                     >
                         VỪA LÊN CHƯƠNG
                     </p>
-                    <p
+                    {/* <p
                         className={`
                         cursor-pointer text-sm
                         
@@ -32,13 +39,13 @@ function NewFeed() {
                         onClick={() => setTab(1)}
                     >
                         TRUYỆN XEM NHIỀU TRONG TUẦN
-                    </p>
+                    </p> */}
 
                 </div>
                 <div className='pb-10'>
                     {
-                        newsFeedData.map((item: any, index: number) => (
-                            <NewsFeedCard item={item} key={index.toString()} />
+                        novelsLast.map((item: NovelFeedCardProps, id) => (
+                            <NovelFeedCard item={item} key={id.toString()} />
                         ))
                     }
                     {/* <Pagination
@@ -58,24 +65,26 @@ function NewFeed() {
                 </div>
 
             </div>
-            <div className='lg:w-1/3 lg:sticky xs:w-full top-[0] self-start pl-4 sm:border-l-2 sm:border-[#f0f1f2]'>
-                <p className='text-base text-gray_text font-semibold mt-5'>BẢNG XẾP HẠNG LƯỢT THÍCH</p>
+            <div className='lg:w-1/4 lg:sticky xs:w-full top-[0] self-start pl-4 sm:border-l-2 sm:border-[#f0f1f2]'>
+                <p className='text-base text-theme_color font-semibold mt-5 uppercase'>Thể loại</p>
                 <div className="flex flex-wrap gap-x-2 gap-y-2 mt-5">
-
                     {/* // change it */}
-                    {categories.map((category: string, index: number) => (
-                        <p
+                    {categories.map((category, id) => (
+                        <Link to={`/list/category/${category.id}`}>
+                            <p  
                             className='
                             text-[15px] py-2 px-4 border-[1px] 
-                            text-gray_text
+                            text-gray_text border-red
                             rounded-full
                             cursor-pointer
-                            border-solid border-[#e1e1e1]'
-                            key={index.toString()}
+                            border-solid '
+                            key={id.toString()}
                         >
-                            {category}
+                            {category.name}
                         </p>
+                        </Link>
                     ))}
+
                 </div>
             </div>
         </div>

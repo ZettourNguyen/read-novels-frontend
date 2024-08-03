@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../store'
 
 interface User {
     id: number,
@@ -12,6 +10,7 @@ interface User {
     blacklist:string,
     confirmer: boolean,
     createAt: string,
+    rolesId: number[]
 }
 
 interface AuthState {

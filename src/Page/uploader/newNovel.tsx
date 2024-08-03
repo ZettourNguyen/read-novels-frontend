@@ -6,25 +6,36 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useCategoryList } from "@/hooks/userCategoryList";
 import { TagProps, useTagList } from "@/hooks/userTagList";
 import { TbPencilQuestion } from "react-icons/tb";
-import { INovelInputI } from "../Novel/Novel.interface";
+import { INovelI, INovelInputI } from "../Novel/Novel.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useCreateNovel } from "@/hooks/useNovel";
+import { useNovel } from "@/hooks/useNovel";
 import actionNotification from "@/components/NotificationState/Toast";
+import CropperImage from "@/components/Another/CropperImage";
+import axiosInstance from "@/api";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/store/firebaseConfig";
+import history from "@/router/history";
+import { ToastContainer } from "react-toastify";
+import { FiInfo } from "react-icons/fi";
 
 export const defaultImage = 'https://static.sangtacvietcdn.xyz/img/bookcover256.jpg'
 
 export default function NewNovel() {
     const [selectedTag, setSelectedTag] = useState<TagProps[]>([]);
+    const [isChecked, setIsChecked] = useState(false);
     const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
+    const [croppedImage, setCroppedImage] = useState<string | null>(null);
+    const [uploadImageCover, setUploadImageCover] = useState<boolean>(false);
     const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
     const novelNameRef = useRef<HTMLInputElement>(null);
     const authorNameRef = useRef<HTMLInputElement>(null);
     const introductionRef = useRef<HTMLTextAreaElement>(null);
+    const [novel, setNovel] = useState<INovelI | undefined>();
     const { categories } = useCategoryList();
     const { tags } = useTagList();
     const user = useSelector((state: RootState) => state.auth.user)
-    const { createNovelAPI, loading, error } = useCreateNovel();
+    const { createNovelAPI, error } = useNovel();
     useEffect(() => {
         if (selectedTag.length > 5) {
             setIsFormVisible(false);
@@ -32,7 +43,11 @@ export default function NewNovel() {
     }, [selectedTag]);
 
     const handleAddTag = () => {
-        setIsFormVisible(true);
+        if (isFormVisible) {
+            setIsFormVisible(false);
+        }else{
+            setIsFormVisible(true);
+        }
     };
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedCategoryId = parseInt(event.target.value);
@@ -61,159 +76,263 @@ export default function NewNovel() {
 
 
     const handleNextButtonClick = async () => {
-        const novelName = novelNameRef.current?.value;; // Cập nhật giá trị state khi có sự thay đổi
-        if (!novelName) {
-            actionNotification("Bạn chưa nhập Tên truyện", 'warning')
-            return;
+        if (uploadImageCover) {
+            await handleUpload()
         }
-        const authorName = authorNameRef.current?.value || null
-        if (categoryId == null) {
-            actionNotification("Bạn chưa nhập Thể loại", 'warning')
-            return
+        else {
+            const novelName = novelNameRef.current?.value;; // Cập nhật giá trị state khi có sự thay đổi
+            if (!novelName) {
+                actionNotification("Bạn chưa nhập Tên truyện", 'warning')
+                return;
+            }
+            const authorName = authorNameRef.current?.value || null
+            if (categoryId == null) {
+                actionNotification("Bạn chưa nhập Thể loại", 'warning')
+                return
+            }
+            if (!isChecked) {
+                actionNotification('Vui lòng đồng ý với các Điều Khoản Dịch Vụ.', 'error')
+                return
+            }
+            const idString = user?.id.toString() || '0'; // Ép kiểu sang chuỗi và xử lý giá trị null
+            const posterId: number = parseInt(idString);
+            const novelInput: INovelInputI = {
+                data: {
+                    title: `${novelNameRef.current?.value}`,
+                    image: defaultImage,
+                    banner: null,
+                    state: "unpublished",
+                    description: `${introductionRef.current?.value}`,
+                    posterId: posterId,
+                    categoryId: categoryId
+                },
+                authorNameInInput: authorName,
+                tagsId: selectedTagIds
+            };
+            const novelResult = await createNovelAPI(novelInput)
+            setNovel(novelResult)
+            if (error) {
+                actionNotification("Tiểu thuyết đã tạo thất bại!", 'error')
+
+            }
+            actionNotification("Tiểu thuyết đã được tạo thành công!", 'success')
+            setUploadImageCover(true)
+            
         }
-        const idString = user?.id.toString() || '0'; // Ép kiểu sang chuỗi và xử lý giá trị null
-        const posterId: number = parseInt(idString);
-        const novelInput: INovelInputI = {
-            data: {
-                title: `${novelNameRef.current?.value}`,
-                image: defaultImage,
-                banner: null,
-                state: "ongoing",
-                description: `${introductionRef.current?.value}`,
-                posterId: posterId,
-                categoryId: categoryId
-            },
-            authorNameInInput: authorName,
-            tagsId: selectedTagIds
-        };
-        await createNovelAPI(novelInput) 
-        actionNotification("Tiểu thuyết đã được tạo thành công!", 'success')
+    };
+
+    //checkbox
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+    };
+    // CropperImage
+    const handleCropComplete = (croppedImageUrl: string | null) => {
+        setCroppedImage(croppedImageUrl);
+    };
+
+    const [imageUrl, setImageUrl] = useState("");
+    const urlToBlob = async (url: string): Promise<Blob> => {
+        const response = await fetch(url);
+        return await response.blob();
+    };
+    
+    const handleUpload = async () => {
+        if (croppedImage) {
+            try {
+                const croppedImageBlob = await urlToBlob(croppedImage);
+                const storageRef = ref(storage, `imageCover/${novel?.id}/imageCover`);
+                const uploadTask = uploadBytesResumable(storageRef, croppedImageBlob);
+    
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        // Theo dõi tiến trình tải lên nếu cần
+                    },
+                    (error) => {
+                        console.error('Upload failed:', error);
+                        actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                            setImageUrl(downloadURL); // Cập nhật imageUrl
+                            console.log('File available at', downloadURL);
+                            const data = {
+                                novelId: novel?.id,
+                                image: downloadURL // Sử dụng downloadURL trực tiếp
+                            };
+                            try {
+                                const response = await axiosInstance.put('/novel/image', data);
+                                console.log('response.data:', response.data);
+                                actionNotification("Ảnh bìa đã thêm thành công!", 'success');
+                                setTimeout(() => {
+                                    history.push('/uploader/published');
+                                }, 2000);
+                            } catch (error) {
+                                console.error("API update failed:", error);
+                                actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
+                            }
+                        });
+                    }
+                );
+            } catch (error) {
+                console.error("Upload failed:", error);
+                actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
+            }
+        } else {
+            actionNotification("Phải cắt ảnh trước khi Lưu", 'warning');
+        }
     };
 
 
     return (
         <div className="">
             {/* content */}
+            <ToastContainer />
 
             <div className="flex gap-5">
                 {/* Form them novel */}
                 <div className="flex-1 bg-white h-max w-max p-6
                 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
-                    <div className="flex mx-1 bg-[#FF6A30] text-white p-2 rounded-md gap-2">
-                        <TbInfoCircleFilled size={25} />
-                        <span>Sau khi nhập tên truyện, nên kiểm tra tên truyện xem để có chưa, tránh mất thời gian</span>
-                    </div>
-                    <div className="mb-5">
-                        <div className="my-1 mx-1">Tên truyện</div>
-                        <div className="flex mx-1">
-                            <div className="border border-gray flex rounded-md p-[2px] flex-1 mr-2">
-                                <input type="text" placeholder="Tên truyện"
-                                    className="ml-1 p-2 w-[100%] outline-none"
-                                    ref={novelNameRef}
-                                    required />
-                            </div>
-                            <ButtonWithTooltip className="bg-sky_blue_light_500 hover:bg-sky_blue_light
+                    {!uploadImageCover && (
+                        <div>
+                            {/* <div className="flex mx-1 bg-[#FF6A30] text-white p-2 rounded-md gap-2">
+                            <FiInfo size={25} />
+                                <span>Sau khi nhập tên truyện, nên kiểm tra tên truyện xem để có chưa, tránh mất thời gian</span>
+                            </div> */}
+                            <div className="mb-5">
+                                <div className="my-1 mx-1">Tên truyện</div>
+                                <div className="flex mx-1">
+                                    <div className="border border-gray flex rounded-md p-[2px] flex-1 mr-2">
+                                        <input type="text" placeholder="Tên truyện"
+                                            className="ml-1 p-2 w-[100%] outline-none"
+                                            ref={novelNameRef}
+                                            required />
+                                    </div>
+                                    <ButtonWithTooltip className="bg-sky_blue_light_500 hover:bg-sky_blue_light
                                      text-white font-bold py-2 px-2 mr-2 rounded"
-                                onClick={handleCheckButtonClick}
-                                title="Kiểm tra tên truyện">
-                                <TbPencilQuestion />
-                            </ButtonWithTooltip>
-                        </div>
+                                        onClick={handleCheckButtonClick}
+                                        title="Kiểm tra tên truyện">
+                                        <TbPencilQuestion />
+                                    </ButtonWithTooltip>
+                                </div>
 
-                    </div>
+                            </div>
 
-                    <div className="mb-5">
-                        <div className="my-1 mx-1">Tác giả/Bút danh</div>
-                        <div className="border mx-1 border-gray flex rounded-md p-[2px]  ">
-                            <input type="text"
-                                placeholder="Để trống nếu bạn là tác giả và lấy username của bạn làm tên tác giả"
-                                className="ml-1 p-2 w-[100%] outline-none"
-                                ref={authorNameRef}
-                            />
-                        </div>
-                    </div>
-                    <div className="mb-5 mx-1">
-                        <div className="my-1">Thể loại chính</div>
-                        <div className="border border-gray flex rounded-md p-[2px]  ">
-                            <select onChange={handleCategoryChange}
-                                className="ml-1 w-full outline-none p-2 max-h-40 overflow-y-auto">
-                                {categories.map((category) => (
-                                    <option className="" key={category.id} value={category.id}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
+                            <div className="mb-5">
+                                <div className="flex">
+                                <div className="my-1 mx-1">Tác giả/Bút danh</div>
+                                <div className="flex mx-1 text-[#FF6A30] p-1 text-sm rounded-md gap-1 items-end">
+                                    <FiInfo size={18} className="mb-[1px]" />
+                                    <span>Nếu truyện có nhiều tác giả, hãy thêm ";" chính giữa</span>
+                                </div>
+                                </div>
+                                <div className="border mx-1 border-gray flex rounded-md p-[2px]  ">
+                                    <input type="text"
+                                        placeholder="Để trống nếu bạn là tác giả và lấy username của bạn làm tên tác giả"
+                                        className="ml-1 p-2 w-[100%] outline-none"
+                                        ref={authorNameRef}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-5 mx-1">
+                                <div className="my-1">Thể loại chính</div>
+                                <div className="border border-gray flex rounded-md p-[2px]  ">
+                                    <select onChange={handleCategoryChange} defaultValue=""
+                                        className="ml-1 w-full outline-none p-2 max-h-40 overflow-y-auto">
+                                        <option value="" disabled>Chọn thể loại</option>
+                                        {categories.map((category) => (
+                                            <option key={category.id} value={category.id}>
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div className="mb-5 mx-1">
-                        {selectedTag.length > 5 &&
-                            <div className="flex bg-[#FF6A30] text-white p-2 rounded-md gap-2">
-                                <TbInfoCircleFilled size={25} />
-                                <span>Một truyện chỉ có 5 tag</span>
-                            </div>}
-                        <div className="my-1">Tag</div>
-                        <div className="flex">
-                            <div className="flex-1 border flex-wrap border-gray flex rounded-md p-[2px] mr-2 max-h-28 min-h-[50px] overflow-y-auto">
-                                {selectedTag.slice(0, 5).map((tag) => (
-                                    <div className="flex items-center rounded-3xl bg-gray_light border mx-[5px] my-1 p-2" key={tag.id}>
-                                        {tag.name}
+                            <div className="mb-5 mx-1">
+                                {selectedTag.length > 5 &&
+                                    <div className="flex bg-[#FF6A30] text-white p-2 rounded-md gap-2">
+                                        <TbInfoCircleFilled size={25} />
+                                        <span>Một truyện chỉ có 5 tag</span>
+                                    </div>}
+                                <div className="my-1">Tag</div>
+                                <div className="flex">
+                                    <div className="flex-1 border flex-wrap border-gray flex rounded-md p-[2px] mr-2 max-h-28 min-h-[50px] overflow-y-auto">
+                                        {selectedTag.slice(0, 5).map((tag) => (
+                                            <div className="flex items-center rounded-3xl bg-gray_light border mx-[5px] my-1 p-2" key={tag.id}>
+                                                {tag.name}
+                                                <button
+                                                    className="ml-2 text-red-500"
+                                                    onClick={() => handleRemoveTag(tag.id)}
+                                                >
+                                                    <AiOutlineClose />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button
+                                        className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-2 px-2 mr-2 rounded"
+                                        onClick={handleAddTag}
+                                    >
+                                        <BiSolidBookAdd />
+                                    </button>
+                                </div>
+
+
+                                {isFormVisible && (
+                                    <div className="mt-4 p-4 border rounded-md">
+                                        <h3 className="mb-2">Chọn Tag</h3>
+                                        <div className="max-h-40 overflow-y-auto">
+                                            {tags.map((tags) => (
+                                                <div
+                                                    className="cursor-pointer rounded-sm bg-gray_light border mx-2 p-2 my-1 flex justify-between items-center"
+                                                    key={tags.id}
+                                                    onClick={() => handleSelectTag(tags)}
+                                                >
+                                                    {tags.name}
+                                                    {selectedTag.find((tag) => tag.id === tags.id) && (
+                                                        <AiOutlineClose className="text-red-500 ml-2" />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
                                         <button
-                                            className="ml-2 text-red-500"
-                                            onClick={() => handleRemoveTag(tag.id)}
+                                            className="mt-4 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-2 px-4 rounded"
+                                            onClick={handleOk}
                                         >
-                                            <AiOutlineClose />
+                                            OK
                                         </button>
                                     </div>
-                                ))}
+                                )}
                             </div>
-                            <button
-                                className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-2 px-2 mr-2 rounded"
-                                onClick={handleAddTag}
-                            >
-                                <BiSolidBookAdd />
-                            </button>
+                            <div className=" bg-white rounded-lg rounded-t-lg mx-1">
+                                <div>Giới thiệu</div>
+                                <textarea className="py-2 px-3 mb-2 w-[100%] focus:ring-0 focus:outline-none rounded-md mt-1 dark:text-white
+            border-[1px] border-gray overflow-hidden break-words resize-none text-start h-160 overflow-y-auto"
+                                    name="comments"
+                                    id="comments"
+                                    placeholder=""
+                                    ref={introductionRef}
+                                    rows={6}></textarea>
+                            </div>
                         </div>
-
-
-                        {isFormVisible && (
-                            <div className="mt-4 p-4 border rounded-md">
-                                <h3 className="mb-2">Chọn Tag</h3>
-                                <div className="max-h-40 overflow-y-auto">
-                                    {tags.map((tags) => (
-                                        <div
-                                            className="cursor-pointer rounded-sm bg-gray_light border mx-2 p-2 my-1 flex justify-between items-center"
-                                            key={tags.id}
-                                            onClick={() => handleSelectTag(tags)}
-                                        >
-                                            {tags.name}
-                                            {selectedTag.find((tag) => tag.id === tags.id) && (
-                                                <AiOutlineClose className="text-red-500 ml-2" />
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                                <button
-                                    className="mt-4 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-2 px-4 rounded"
-                                    onClick={handleOk}
-                                >
-                                    OK
-                                </button>
+                    )}
+                    {uploadImageCover && <CropperImage onCropComplete={handleCropComplete} />}
+                    {croppedImage && (
+                        <div className="mt-5">
+                            
+                            <div className="my-1">Ảnh đã cắt</div>
+                            <div className="bg-gray_light border border-gray rounded-md p-2 w-full max-w-[99%] h-72 overflow-hidden">
+                                <img
+                                    src={croppedImage}
+                                    alt="Cropped"
+                                    className="w-full h-full object-contain"
+                                />
                             </div>
-                        )}
-                    </div>
-                    <div className=" bg-white rounded-lg rounded-t-lg mx-1">
-                        <div>Giới thiệu</div>
-                        <textarea className="py-2 px-3 mb-4 w-[100%] focus:ring-0 focus:outline-none rounded-md mt-1 dark:text-white
-            border-[1px] border-gray overflow-hidden break-words resize-none text-start h-160"
-                            name="comments"
-                            id="comments"
-                            placeholder=""
-                            ref={introductionRef}
-                            rows={6}></textarea>
-                    </div>
+                        </div>
+                    )}
                     <div className="flex justify-end"> {/* Sử dụng flexbox và justify-end để đưa nút bên cùng phải */}
-                        <ButtonWithTooltip className="bg-[#FF6A30] hover:bg-red 
+                        <ButtonWithTooltip className="bg-[#FF6A30] mt-2 hover:bg-red 
                          text-white font-bold py-2 px-2 mr-2 rounded"
                             onClick={handleNextButtonClick}
                             title="">
@@ -270,7 +389,8 @@ export default function NewNovel() {
                     <p className="my-4">Cập nhật lần cuối ngày 05/01/2024</p>
 
                     <div className="pt-5 border-t border-gray ">
-                        <input type="checkbox" id="checkbox-25" className="mr-3" />
+                        <input type="checkbox" id="checkbox-25" className="mr-3"
+                            checked={isChecked} onChange={handleCheckboxChange} />
 
                         <label htmlFor="checkbox-25" className="v-label v-label--clickable cursor-pointer">
                             Tôi đồng ý với các Điều Khoản Dịch Vụ khi đăng truyện

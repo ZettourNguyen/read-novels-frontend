@@ -30,10 +30,10 @@ function Banner() {
     const randomItem = list[Math.floor(Math.random() * list.length)];
 
     return (
-        <div className='h-[515px]s bg-cover flex items-center'>
-            <div className="md:container mx-auto flex-1">
+        <div className='flex justify-centerh-[515px]s bg-cover items-center '>
+            <div className="md:container mx-auto flex-1 ">
                 <a href={randomItem.href}>
-                <img src={randomItem.src} alt={randomItem.name} />
+                <img className='w-[1016px]' src={randomItem.src} alt={randomItem.name} />
                 </a>
             </div>
         </div>

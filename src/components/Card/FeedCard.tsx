@@ -1,22 +1,25 @@
 import { FaRegEye } from 'react-icons/fa'
 import userIcon from '@/assets/imgs/user-128.svg'
+import { timeAgo } from '@/store/Time'
+import { IAuthorI } from '@/hooks/useAuthor'
 
-export interface FeedCardProps {
+export interface NovelFeedCardProps {
+    id: number
     title: string
-    image_preview: string,
-    author: string,
-    time: string,
-    link: string,
-    view: number
+    image: string,
+    author: IAuthorI[],
+    lastChapterCreatedAt: string,
+    views: number
 }
 
-function NewsFeedCard({ item }: { item: FeedCardProps }) {
+function NovelFeedCard({ item }: { item: NovelFeedCardProps }) {
+
     return (
         <div className='mw-[100%] flex gap-x-[20px] border-[#f0f1f2] py-3 border-b-2 lg:flex-row w-[100%]   '>
             <div className='img-preview w-[8%]'>
-                <a href={item.link}>
+                <a href={`/novel/${item.id}`}>
                     <img
-                        src={item.image_preview}
+                        src={item.image}
                         alt=""
                         className='w-[100%] h-[100%] 
                     object-cover rounded-[4px] cursor-pointer
@@ -27,31 +30,39 @@ function NewsFeedCard({ item }: { item: FeedCardProps }) {
             <div className='flex flex-col flex-1 '>
                 <div>
 
-                    <a className='mt-[10px]' href={item.link}>
+                    <a className='mt-[10px]' href={`/novel/${item.id}`}>
                         <p className="hover:text-theme_color text-sm font-semibold text-gray_text cursor-pointer">{item.title}</p>
                     </a>
                 </div>
                 <div className='flex justify-between items-center mr-4'>
-
-                    <div className='flex items-center gap-1 cursor-pointer '>
+                    <div className='flex gap-1'>
                         <div className='owner w-[14px] h-[14px]'>
                             <img src={userIcon} alt="" className='w-100 rounded-full h-100' />
                         </div>
-        
-                        <span className='hover:text-theme_color text-gray_text  text-xs'>{item.author}</span>
+                        <div className='flex gap-3  '>
+                            {item.author.map((author) => (
+                                <div key={author.id} className='flex hover:underline items-center gap-1 cursor-pointer'>
+
+                                    <a href={`/list/author/${author.id}`} className='hover:text-theme_color text-gray_text text-xs'>
+                                        {author.nickname}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
                     </div>
+
                     <div className='flex items-center gap-2'>
                         <FaRegEye className="text-[#909399]" />
-                        <span className='text-gray_text text-xs'>{531}{/* item.view */}</span>
+                        <span className='text-gray_text text-xs'>{item.views}</span>
 
                     </div>
                 </div>
                 <div>
-                    <p className='text-xs mt-1 italic'>1 phút trước {/*item.time*/}</p>
+                    <p className='text-xs mt-1 italic'>{timeAgo(item.lastChapterCreatedAt)}</p>
                 </div>
             </div>
         </div>
     )
 }
 
-export default NewsFeedCard
+export default NovelFeedCard

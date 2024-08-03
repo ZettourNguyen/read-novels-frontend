@@ -19,7 +19,6 @@ function Footer() {
                         </div>
                     </div>
                     <div className='flex lg:items-center gap-2 xs:flex-col xs:items-start lg:flex-row'>
-                        <p className="text-xs font-light">Tải app Spiderum</p>
                         <div className='flex items-center gap-2 '>
                             <a href="#">
                                 <img src={Appstore} alt="" width={135} height={41} />
@@ -33,22 +32,22 @@ function Footer() {
                 <div className='py-10 border-t-[1px] border-t-[#e1e1e1] border-t-solid mt-6' >
                     <div className="flex justify-between gap-x-10 flex-wrap gap-y-4">
                         <div className='xs:w-[100%] lg:w-1/3'>
-                            <p className='text-xs text-gray font-semibold'>Công ty Cổ Phần Felizz</p>
-                            <p className='text-xs text-gray'>Trực thuộc Công ty Cổ Phần Spiderum Việt Nam (Spiderum Vietnam JSC)</p>
-                            <p className='text-xs text-gray'>Người chịu trách nhiệm nội dung: Trần Việt Anh</p>
-                            <p className='text-xs text-gray'>Giấy phép MXH số 341/GP-TTTT do Bộ TTTT cấp ngày 27 tháng 6 năm 2016</p>
+                            <p className='text-xs text-gray font-semibold'>Công ty ....</p>
+                            <p className='text-xs text-gray'>Trực thuộc Công ty .... Việt Nam</p>
+                            <p className='text-xs text-gray'>Người chịu trách nhiệm nội dung: Nguyễn Văn Thịnh</p>
+                            <p className='text-xs text-gray'>Giấy phép .....</p>
                         </div>
                         <div className='xs:w-[100%] lg:w-1/4'>
                             <p className='text-xs text-gray font-semibold'>Liên hệ hợp tác</p>
-                            <p className='text-xs text-gray'>Email: contact@spiderum.com</p>
-                            <p className='text-xs text-gray'>Điện thoại: (+84) 977 062 149</p>
+                            <p className='text-xs text-gray'>Email: zettournguyen@gmail.com</p>
+                            <p className='text-xs text-gray'>Điện thoại: ........</p>
                         </div>
                         <div className='xs:w-[100%] lg:w-1/3'>
-                            <p className='text-xs text-gray font-semibold'>© Copyright 2017 - 2023</p>
-                            <p className='text-xs text-gray'>Email: contact@spiderum.com</p>
-                            <p className='text-xs text-gray'>Điện thoại: (+84) 977 062 149</p>
+                            <p className='text-xs text-gray font-semibold'>© Copyright 2024 - 2025</p>
+                            <p className='text-xs text-gray'>Email: zettournguyen@gmail.com</p>
+                            <p className='text-xs text-gray'>Điện thoại: ....</p>
                             <p className='text-xs text-gray'>
-                                Tầng 11, tòa nhà HL Tower, lô A2B, phố Duy Tân, phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội
+                                ..............................................................................
                             </p>
                         </div>
                     </div>
