@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3001'
+const BASE_URL = import.meta.env.VITE_BASE_URL ||'http://localhost:3001'
 // http://localhost:3001/auth/login
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
 });
+console.log('BASE_URL:', BASE_URL);
 
 axiosInstance.interceptors.request.use(async function (config) {
     const token = localStorage.getItem('accessToken')

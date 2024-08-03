@@ -14,7 +14,7 @@ function SignupForm() {
   return (
     <div className="mt-40 sm:mx-auto sm:w-full sm:max-w-sm">
       <div className="mb-4">
-        <a href="http://localhost:5173/">
+        <a href="/">
           <img
             className="mx-auto h-20 w-auto"
             src="https://auth.spiderum.com/assets-auth/images/spiderum-logo.png"
