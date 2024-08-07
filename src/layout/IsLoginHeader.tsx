@@ -161,7 +161,7 @@ function IsLoginHeader() {
         <div className="flex items-center">
           <Link to={'/'}>
             <div className='flex items-center h-[40px]'>
-              <div className='h-[25px] w-[200px]'>
+              <div className='h-[25px]'>
                 <img src={wideLogo} alt="" className='object-cover h-[30px]' />
               </div>
             </div>
@@ -199,7 +199,7 @@ function IsLoginHeader() {
           </div>
           <div className="flex cursor-pointer mr-[16px] items-center" onClick={toggleOverlay}>
             <div className="rounded-full flex items-center relative" ref={menuRef}>
-              <img className="h-[40px] rounded-full" src={avatarUrl} alt="" />
+              <img className="h-[40px] rounded-full mr-2" src={avatarUrl} alt="" />
               {menuNavigate2 && (
                 <div className="absolute top-[44px] left-[-125px] right-0 bg-white text-gray_text p-2" style={{ boxShadow: '0px 0px 20px 5px #61e4fc' }}>
                   <ul>

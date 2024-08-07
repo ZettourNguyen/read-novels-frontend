@@ -191,7 +191,7 @@ export default function NewNovel() {
 
             <div className="lg:flex gap-5 ">
                 {/* Form them novel */}
-                <div className="flex-1 bg-white  h-max w-max p-6
+                <div className="flex-1 bg-white  h-full w-full p-6 mb-6
                 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
                     {!uploadImageCover && (
                         <div>
@@ -204,7 +204,7 @@ export default function NewNovel() {
                                 <div className="flex mx-1">
                                     <div className="border border-gray flex rounded-md p-[2px] flex-1 mr-2">
                                         <input type="text" placeholder="Tên truyện"
-                                            className="ml-1 p-2 w-[100%] outline-none"
+                                            className="ml-1 p-2 w-full outline-none"
                                             ref={novelNameRef}
                                             required />
                                     </div>
@@ -229,7 +229,7 @@ export default function NewNovel() {
                                 <div className="border mx-1 border-gray flex rounded-md p-[2px]  ">
                                     <input type="text"
                                         placeholder="Để trống nếu bạn là tác giả và lấy username của bạn làm tên tác giả"
-                                        className="ml-1 p-2 w-[100%] outline-none"
+                                        className="ml-1 p-2 w-full outline-none"
                                         ref={authorNameRef}
                                     />
                                 </div>
@@ -307,7 +307,7 @@ export default function NewNovel() {
                             </div>
                             <div className=" bg-white rounded-lg rounded-t-lg mx-1">
                                 <div>Giới thiệu</div>
-                                <textarea className="py-2 px-3 mb-2 w-[100%] focus:ring-0 focus:outline-none rounded-md mt-1 dark:text-white
+                                <textarea className="py-2 px-3 mb-2 w-full focus:ring-0 focus:outline-none rounded-md mt-1 dark:text-white
             border-[1px] border-gray overflow-hidden break-words resize-none text-start h-160 overflow-y-auto"
                                     name="comments"
                                     id="comments"
