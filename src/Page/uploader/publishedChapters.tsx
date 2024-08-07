@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Loading from "@/components/Loading";
 import { Link, useParams } from "react-router-dom";
 import { useAddChapters } from "@/hooks/useChapters";
+import axios from "axios";
 export default function PublishChapter() {
     const { novelId } = useParams<{ novelId: string }>();
     const novelIdNumber = Number(novelId);
@@ -66,8 +67,13 @@ export default function PublishChapter() {
                     window.location.reload();
                 }, 1200);
             }
-        } catch (err) {
-            // actionNotification("upLoadChapter Error!", 'error');
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || 'Đã xảy ra lỗi không xác định.';
+                actionNotification(`${errorMessage}`, "error");
+            } else {
+                actionNotification(`Thêm chương thất bại.`, "error");
+            }
         } finally {
             setTimeout(() => {
                 setIsButtonDisabled(false); // Kích hoạt lại nút sau 3 giây
