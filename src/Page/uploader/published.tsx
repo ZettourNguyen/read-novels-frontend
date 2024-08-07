@@ -68,16 +68,18 @@ export default function Published() {
         });
 
     return (
-        <div className="bg-white h-max w-[100%] mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
+        <div className="bg-white h-max w-[100%]  mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
             <div className="mx-5">
                 <div className="h-6"></div>
                 <div>
                 <ToastContainer></ToastContainer>
 
-                    <div className="flex justify-between">
-                        <div className="flex">
+                    <div className="flex justify-between flex-wrap">
+                        
+                        <div className="flex flex-wrap-reverse my-2">
+                            
                             <div className="border border-gray flex rounded-md items-center p-[2px]">
-                                <BiSearchAlt size={25} color="#969696" className="ml-2" />
+                                <BiSearchAlt size={25} color="#969696" className="" />
                                 <input
                                     type="text"
                                     placeholder="Tìm kiếm"
@@ -87,17 +89,18 @@ export default function Published() {
                                 />
                             </div>
                             {selectedOption === 'deleted' && (
-                                <div className="flex mx-1 text-[#FF6A30] p-1 rounded-md gap-1 items-end">
+                                <div className="flex mx-1 text-[#FF6A30] truncate p-1 rounded-md gap-1 items-end">
                                     <FiInfo size={25} />
                                     <span>Truyện đã xóa sẽ bị xóa vĩnh viễn sau 30 ngày</span>
                                 </div>
                             ) || (
-                                    <div className="flex mx-1 text-[#FF6A30] p-1 rounded-md gap-1 items-end">
+                                    <div className="flex mx-1 text-[#FF6A30] truncate p-1 rounded-md gap-1 items-end">
                                         <FiInfo size={25} />
                                         <span>Truyện có từ 10 chương trở lên mới có thể xuất bản</span>
                                     </div>
                                 )}
                         </div>
+                        
                         <div className="flex">
                             <div className="border border-gray flex rounded-md items-center mr-4">
                                 <select
@@ -116,8 +119,8 @@ export default function Published() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-4">
-                        <table className="min-w-full bg-white border border-gray">
+                    <div className="mt-4  overflow-x-auto">
+                        <table className="min-w-full bg-white border border-gray overflow-x-scroll">
                             <thead>
                                 <tr className="bg-gray_light rounded-md">
                                     <th className="border-y border-gray px-3 py-2 text-center">STT</th>

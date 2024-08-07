@@ -102,7 +102,7 @@ export default function ManagerPublishNovel() {
                         
 
                     </div>
-                    <div className="mt-4">
+                    <div className="mt-4 overflow-x-auto">
                         <table className="min-w-full bg-white border border-gray">
                             <thead>
                                 <tr className="bg-gray_light rounded-md">

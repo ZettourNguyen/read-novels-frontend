@@ -189,9 +189,9 @@ export default function NewNovel() {
             {/* content */}
             <ToastContainer />
 
-            <div className="flex gap-5">
+            <div className="flex gap-5 flex-wrap">
                 {/* Form them novel */}
-                <div className="flex-1 bg-white h-max w-max p-6
+                <div className="flex-1 bg-white  h-max w-max p-6
                 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
                     {!uploadImageCover && (
                         <div>
@@ -343,7 +343,7 @@ export default function NewNovel() {
                 </div>
 
                 {/* Điều Khoản Dịch Vụ */}
-                <div className="flex-1 bg-white max-w-[600px] p-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md overflow-y-auto max-h-[600px]">
+                <div className="flex-1 bg-white  max-w-[600px] p-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md overflow-y-auto max-h-[600px]">
                     <h2 className="text-xl font-bold mb-4">Điều Khoản Dịch Vụ</h2>
                     <p>Khi tham gia sử dụng dịch vụ cung cấp bởi <span className="font-bold"> Kho Truyện Chữ</span>, bạn phải đồng ý và tuân thủ các quy định sau:</p>
 
