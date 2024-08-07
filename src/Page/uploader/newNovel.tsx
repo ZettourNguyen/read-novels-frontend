@@ -45,7 +45,7 @@ export default function NewNovel() {
     const handleAddTag = () => {
         if (isFormVisible) {
             setIsFormVisible(false);
-        }else{
+        } else {
             setIsFormVisible(true);
         }
     };
@@ -117,7 +117,7 @@ export default function NewNovel() {
             }
             actionNotification("Tiểu thuyết đã được tạo thành công!", 'success')
             setUploadImageCover(true)
-            
+
         }
     };
 
@@ -135,14 +135,14 @@ export default function NewNovel() {
         const response = await fetch(url);
         return await response.blob();
     };
-    
+
     const handleUpload = async () => {
         if (croppedImage) {
             try {
                 const croppedImageBlob = await urlToBlob(croppedImage);
                 const storageRef = ref(storage, `imageCover/${novel?.id}/imageCover`);
                 const uploadTask = uploadBytesResumable(storageRef, croppedImageBlob);
-    
+
                 uploadTask.on(
                     'state_changed',
                     (snapshot) => {
@@ -219,12 +219,13 @@ export default function NewNovel() {
                             </div>
 
                             <div className="mb-5">
-                                <div className="flex">
-                                <div className="my-1 mx-1">Tác giả/Bút danh</div>
-                                <div className="flex mx-1 text-[#FF6A30] p-1 text-sm rounded-md gap-1 items-end">
-                                    <FiInfo size={18} className="mb-[1px]" />
-                                    <span>Nếu truyện có nhiều tác giả, hãy thêm ";" chính giữa</span>
-                                </div>
+                                <div className="flex flex-wrap">
+                                    <div className="my-1 mx-1">Tác giả/Bút danh</div>
+                                    <div className="flex mx-1 text-[#FF6A30] p-1 text-sm rounded-md gap-1">
+                                        <FiInfo size={18} className="mr-[1px]" />
+                                        <span>Nếu truyện có nhiều tác giả, hãy thêm ";" chính giữa</span>
+                                    </div>
+
                                 </div>
                                 <div className="border mx-1 border-gray flex rounded-md p-[2px]  ">
                                     <input type="text"
@@ -320,7 +321,7 @@ export default function NewNovel() {
                     {uploadImageCover && <CropperImage onCropComplete={handleCropComplete} />}
                     {croppedImage && (
                         <div className="mt-5">
-                            
+
                             <div className="my-1">Ảnh đã cắt</div>
                             <div className="bg-gray_light border border-gray rounded-md p-2 w-full max-w-[99%] h-72 overflow-hidden">
                                 <img
