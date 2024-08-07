@@ -124,7 +124,7 @@ function IsLoginHeader() {
 
   const fetchNotificationElements = async () => {
     const reversedNotifications = notifications.slice().reverse();
-    
+
     const elements = await Promise.all(reversedNotifications.map(async notification => {
       const novelName = await extractNovelId(notification.content);
       if (!novelName) return null;
@@ -152,16 +152,18 @@ function IsLoginHeader() {
 
   useEffect(() => {
     fetchNotificationElements();
-  }, [notifications]); 
+  }, [notifications]);
 
   return (
     <div className="py-[8px]">
       <ToastContainer />
-      <div className="container h-[48px] flex items-center justify-between">
+      <div className="md:container h-[48px] flex items-center justify-between">
         <div className="flex items-center">
-          <Link to={"/"}>
-            <div className="h-[48px] w-[110px] flex items-center justify-between">
-              <img src={wideLogo} alt="" className="object-cover h-[30px]" />
+          <Link to={'/'}>
+            <div className='flex items-center h-[40px]'>
+              <div className='h-[25px] w-[200px]'>
+                <img src={wideLogo} alt="" className='object-cover h-[30px]' />
+              </div>
             </div>
           </Link>
           <div className="flex items-center border-l-[0.1px] text-[#606266] ml-[16px] pl-[8px] border-gray_light">

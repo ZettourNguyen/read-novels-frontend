@@ -16,8 +16,8 @@ function HomePage() {
   const { FollowNovels } = useMostFollowNovels();
   const auth = useSelector((state: RootState) => state.auth);
 
-  if (loading) return <LoadingPlaceholder />; // Show loading placeholder
-  if (error) return <div>Error: {error}</div>;
+  // if (loading) return <LoadingPlaceholder />; // Show loading placeholder
+  // if (error) return <div>Error: {error}</div>;
 
     function handlerReloadRandomNovel(): void {
         refetch()

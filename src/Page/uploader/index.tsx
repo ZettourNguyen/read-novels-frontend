@@ -13,6 +13,10 @@ export default function Uploader() {
     const [isSmallScreen, setIsSmallScreen] = useState(window.matchMedia("(max-width: 640px)").matches);
     const handleSetting = (formName: string) => {
         setActiveForm(formName);
+        setSideBarState(false)
+    };
+    const handleResize = () => {
+        setIsSmallScreen(window.innerWidth < 768);
     };
     useEffect(() => {
         const path = location.pathname.split("/").pop();
@@ -47,17 +51,36 @@ export default function Uploader() {
     }, []);
 
     useEffect(() => {
+        // Cập nhật trạng thái sidebarState dựa trên kích thước màn hình khi component mount
+        if (isSmallScreen) {
+            setSideBarState(false);
+        }
+
+        // Thêm sự kiện lắng nghe resize
+        window.addEventListener("resize", handleResize);
+        
+        // Xóa sự kiện lắng nghe khi component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [isSmallScreen]);
+
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
                 setSideBarState(false);
             }
         };
-
         if (isSmallScreen) {
             document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
         }
 
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        // Xóa sự kiện lắng nghe khi component unmount
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, [isSmallScreen]);
 
     const handleChangeSideBarState = (): void => {

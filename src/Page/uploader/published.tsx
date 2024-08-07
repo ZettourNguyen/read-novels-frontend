@@ -89,14 +89,14 @@ export default function Published() {
                                 />
                             </div>
                             {selectedOption === 'deleted' && (
-                                <div className="flex mx-1 text-[#FF6A30] truncate p-1 rounded-md gap-1 items-end">
+                                <div className="flex mx-1 text-[#FF6A30] truncate  p-1 rounded-md gap-1 items-end">
                                     <FiInfo size={25} />
-                                    <span>Truyện đã xóa sẽ bị xóa vĩnh viễn sau 30 ngày</span>
+                                    <span className="truncate text-ellipsis whitespace-normal">Truyện đã xóa sẽ bị xóa vĩnh viễn sau 30 ngày</span>
                                 </div>
                             ) || (
-                                    <div className="flex mx-1 text-[#FF6A30] truncate p-1 rounded-md gap-1 items-end">
+                                    <div className="flex mx-1 text-[#FF6A30] truncate  p-1 rounded-md gap-1 items-end">
                                         <FiInfo size={25} />
-                                        <span>Truyện có từ 10 chương trở lên mới có thể xuất bản</span>
+                                        <span className="truncate text-ellipsis whitespace-normal">Truyện có từ 10 chương trở lên mới có thể xuất bản</span>
                                     </div>
                                 )}
                         </div>

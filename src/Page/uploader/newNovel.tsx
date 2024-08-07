@@ -189,7 +189,7 @@ export default function NewNovel() {
             {/* content */}
             <ToastContainer />
 
-            <div className="flex gap-5 flex-wrap">
+            <div className="lg:flex gap-5 ">
                 {/* Form them novel */}
                 <div className="flex-1 bg-white  h-max w-max p-6
                 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
@@ -257,7 +257,7 @@ export default function NewNovel() {
                                     </div>}
                                 <div className="my-1">Tag</div>
                                 <div className="flex">
-                                    <div className="flex-1 border flex-wrap border-gray flex rounded-md p-[2px] mr-2 max-h-28 min-h-[50px] overflow-y-auto">
+                                    <div className="flex-1 border flex-wrap border-gray flex rounded-md p-[2px] mr-2 max-h-28 overflow-y-auto">
                                         {selectedTag.slice(0, 5).map((tag) => (
                                             <div className="flex items-center rounded-3xl bg-gray_light border mx-[5px] my-1 p-2" key={tag.id}>
                                                 {tag.name}
