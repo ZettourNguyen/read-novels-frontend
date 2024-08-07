@@ -1,6 +1,5 @@
 import { useGetHistoryUser } from '@/hooks/useHistory';
 import { timeAgo } from '@/store/Time';
-import LoadingPlaceholder from '../Loading/LoadingPlaceholder';
 
 export default function HistoryCard() {
   const { histories, loading, error, rmHistory, fetchHistories} = useGetHistoryUser();

@@ -13,6 +13,7 @@ import { addHistory } from "@/hooks/useHistory";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useIncrementView } from "@/hooks/useView";
+import ChapterContent from "./chapterContent";
 
 export interface IChapterWithIndexesI {
     preIndex: number | null;
@@ -131,7 +132,8 @@ export default function Chapter() {
                 <div className={styleContent}>
                     {loading ?
                         (<Loading />)
-                        : chapter ? (<EscapedNewLineToLineBreakTag string={chapter?.content || ''} />)
+                        : chapter ? (<ChapterContent filePath={`${chapter?.content}`}></ChapterContent>
+                        )
                             : (<div>
                                 Error: {error}
                                 <br />
