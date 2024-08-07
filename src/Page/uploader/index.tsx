@@ -13,10 +13,14 @@ export default function Uploader() {
     const [isSmallScreen, setIsSmallScreen] = useState(window.matchMedia("(max-width: 640px)").matches);
     const handleSetting = (formName: string) => {
         setActiveForm(formName);
+        if(isSmallScreen) {
         setSideBarState(false)
+
+        }
+            
     };
     const handleResize = () => {
-        setIsSmallScreen(window.innerWidth < 768);
+        setIsSmallScreen(window.innerWidth < 640);
     };
     useEffect(() => {
         const path = location.pathname.split("/").pop();
