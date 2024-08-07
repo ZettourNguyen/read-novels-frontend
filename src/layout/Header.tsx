@@ -27,7 +27,7 @@ function Header() {
         >
             <div className="md:container h-[48px] flex items-center justify-between mx-2">
                 <Link to={'/'}>
-                    <div className='flex items-center h-[40px]'>
+                    <div className='flex items-center h-[40px] '>
                         <div className='h-[25px] w-[200px]'>
                             <img src={wideLogo} alt="" className='object-cover h-[30px]' />
                         </div>

@@ -100,7 +100,7 @@ export default function Uploader() {
                     onClick={() => setSideBarState(false)}
                 ></div>
             )}
-            {sideBarState && (
+            {sideBarState && !isSmallScreen && (
                 <div className={ `bg-white w-[260px] min-h-screen px-4 
                 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] 
                 z-[1003] flex-col text-[#292929]

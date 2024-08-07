@@ -193,7 +193,7 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
                     Người đăng
                 </div>
                 <div className='flex border-x-[2px] border-x-gray_light p-3'>
-                    <img className='h-[60px] rounded-full shadow-custom-blue' src={novelDetails.posterAvatar} alt="" />
+                    <img className='h-[60px] w-[60px]rounded-full shadow-custom-blue' src={novelDetails.posterAvatar} alt="" />
                     <div className='ml-3 self-center'>{novelDetails.posterName}</div>
                 </div>
             </a>
