@@ -7,6 +7,7 @@ import Loading from "@/components/Loading";
 import { Link, useParams } from "react-router-dom";
 import { useAddChapters } from "@/hooks/useChapters";
 import axios from "axios";
+import { FaRegRectangleList } from "react-icons/fa6";
 export default function PublishChapter() {
     const { novelId } = useParams<{ novelId: string }>();
     const novelIdNumber = Number(novelId);
@@ -95,23 +96,23 @@ export default function PublishChapter() {
             <div className="mx-5">
                 <div className="h-6"></div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex flex-wrap justify-between items-center space-y-2 mb-2">
                     <a href={`/novel/${novelIdNumber}`}><div className="font-semibold text-lg">{propsChapter?.novelTitle}</div></a>
-                    <div>
+                    <div className="flex flex-wrap ">
                         <Link to={`/uploader/published`}>
                             <ButtonWithTooltip
-                                className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
+                                className="flex items-center gap-2 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
                                 title=""
                             >
-                                Danh sách truyện
+                                <FaRegRectangleList size={23}/> Truyện
                             </ButtonWithTooltip>
                         </Link>
                         <Link to={`../published/list-chapters/${propsChapter?.novelId}`}>
                             <ButtonWithTooltip
-                                className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
+                                className="flex items-center gap-2 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
                                 title=""
                             >
-                                Danh sách chương
+                                <FaRegRectangleList size={23}/> Chương
                             </ButtonWithTooltip>
                         </Link>
                     </div>
@@ -197,7 +198,7 @@ export default function PublishChapter() {
                 </div>
                 <div className="mb-3">Số lượng từ trong chương này: {contentLength} chữ</div>
 
-                <div>Ghi chú: Truyện có thể dán link ảnh, sẽ tự động hiển thị ảnh khi đọc.</div>
+                {/* <div>Ghi chú: Truyện có thể dán link ảnh, sẽ tự động hiển thị ảnh khi đọc.</div> */}
                 <div className="h-6"></div>
 
             </div>
