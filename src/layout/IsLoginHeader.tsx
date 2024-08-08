@@ -5,7 +5,7 @@ import {
 import { IoMdNotificationsOutline } from "react-icons/io";
 import wideLogo from "../assets/imgs/wideLogo.png";
 import { Link } from "react-router-dom";
-import { FaBookOpen, FaRegCheckCircle } from "react-icons/fa";
+import { FaBookOpen, FaExclamation, FaRegCheckCircle } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
@@ -32,12 +32,14 @@ function IsLoginHeader() {
   const inputSearchRef = useRef<HTMLInputElement | null>(null);
   const { permissions, loading, error } = useUserPermission();
   const [menuNavigateNotification, setMenuNavigateNotification] = useState<boolean>(false);
-  const { notifications, fetchNotifications } = useNotification();
+  const { notifications, fetchNotifications, changeStateIsSeen } = useNotification();
   const [notificationElements, setNotificationElements] = useState<JSX.Element[]>([]);
 
   // notification
   const toggleOverlayNotification = () => {
     setMenuNavigateNotification(!menuNavigateNotification);
+    fetchNotifications()
+    changeStateIsSeen()
   };
 
   //search
@@ -127,28 +129,28 @@ function IsLoginHeader() {
 
     const elements = await Promise.all(reversedNotifications.map(async notification => {
       const novelName = await extractNovelId(notification.content);
-      if (!novelName) return null;
+
 
       return (
-        <Link key={notification.id} to={`/novel/${novelName}`}>
-          <li className={`flex items-start border-b p-2 ${notification.type === 'success' ? 'text-green'
-            : notification.type === 'error' ? 'text-red' : 'text-[#008800]'}`}>
-            {notification.type === 'success' ?
-              <FaRegCheckCircle size={25} className="mr-2 mt-1" />
-              : notification.type === 'error' ? <MdError size={25} className="mr-2 mt-1" />
-                : <IoMdNotificationsOutline size={25} className="mr-2 " />}
-            <div>
-              <p className="text-sm underline">{notification.title}</p>
-              <div dangerouslySetInnerHTML={{ __html: notification.content }} />
-              <small>{notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Không có ngày'}</small>
-            </div>
-          </li>
-        </Link>
+        <li key={notification.id} className={`flex ${!novelName && !notification.title.includes("có thể") ? 'text-red' : 'text-[#008800]'} items-start border-b p-2 ${notification.type === 'unseen' ? 'bg-gray_hover'
+          : notification.type === 'seen' ? 'bg-white' : ''}`}>
+          {notification.type === 'success' ?
+            <FaRegCheckCircle size={25} className="mr-2 mt-1" />
+            : notification.type === 'error' ? <MdError size={25} className="mr-2 mt-1" />
+              : <IoMdNotificationsOutline size={25} className="mr-2 " />}
+          <a href={`${novelName ? `/novel/${novelName}` : '#'}`}>
+            <div className="flex flex-wrap"><p className="text-sm underline p-1">{notification.title}</p>
+              <p className={`border-[1px] ${notification.title.includes("có thể") ? "border-green" : "border-red"} ml-2 text-sm p-1 bg-white rounded-full`}>{notification.type}</p></div>
+            <div dangerouslySetInnerHTML={{ __html: notification.content }} />
+            <small>{notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Không có ngày'}</small>
+          </a>
+        </li>
       );
     }));
 
-    setNotificationElements(elements.filter((element): element is JSX.Element => element !== null));
+    setNotificationElements(elements);
   };
+
 
   useEffect(() => {
     fetchNotificationElements();
@@ -181,13 +183,22 @@ function IsLoginHeader() {
           </div>
         </div>
         <div className="flex items-center justify-end">
-          <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer" onClick={handleSearchIconClick}>
+          <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer"
+            onClick={handleSearchIconClick}>
             <GoSearch size={20} />
           </div>
-          <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer relative" onClick={toggleOverlayNotification}>
-            <IoMdNotificationsOutline size={20} />
+          {/* noti  */}
+          <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer relative"
+            onClick={toggleOverlayNotification}>
+            <div className="relative"><IoMdNotificationsOutline size={20} />
+            {notifications.some(noti => noti.type==="unseen") && (
+              <div className="absolute bottom-3 left-4 text-red"><FaExclamation size={12} /></div>
+            )}
+
+            </div>
             {menuNavigateNotification && (
-              <div className="absolute top-[44px] left-[-425px] max-h-[380px] min-h-[50px] overflow-y-scroll right-0 bg-white text-gray_text p-2" style={{ boxShadow: '0px 0px 20px 5px #61e4fc' }}>
+              <div className="absolute top-[44px] left-[-425px] max-h-[380px] min-h-[50px] overflow-y-scroll right-0 bg-white text-gray_text p-2"
+                style={{ boxShadow: '0px 0px 20px 5px #61e4fc' }}>
                 <ul>
                   {notificationElements.length === 0 && (
                     <div><strong>Bạn không có thông báo.</strong><br /></div>

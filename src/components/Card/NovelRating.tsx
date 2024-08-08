@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import actionNotification from "../NotificationState/Toast";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import StarRating from "../Another/StarRating";
+import { useUserPermission } from "@/hooks/usePermission";
 
 export interface RatingDetails {
     id: number;
@@ -28,7 +29,10 @@ export default function NovelRating({ novelId }: { novelId: number }) {
     const ratingContentRef = useRef<HTMLTextAreaElement>(null);
     const [ratings, setRatings] = useState<RatingDetails[]>([]);
     const [ratingPoint, setRatingPoint] = useState(5);
-
+    const { permissions } = useUserPermission();
+    const hasNoReviewPermission = permissions.some(permission =>
+        permission.name.includes("NoReview")
+      );
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRatingPoint(parseFloat(event.target.value));
     };
@@ -115,7 +119,7 @@ export default function NovelRating({ novelId }: { novelId: number }) {
                     </div>
                 </div>
                 <div className="bg-white rounded-lg rounded-t-lg m-2">
-                    <textarea
+                    <textarea disabled={hasNoReviewPermission}
                         className="p-4 mb-1 w-full focus:ring-0 focus:outline-none rounded-md mt-2 dark:text-white
                         border-[1px] border-gray overflow-hidden break-words resize-none text-start h-40 overflow-y-auto"
                         placeholder="Hướng dẫn review:
@@ -128,7 +132,7 @@ Cốt truyện như nào? (logic?, sảng văn?, bố cục nhiều lớp?, quay
                     />
                 </div>
                 <div className="flex justify-center">
-                    <button
+                    <button disabled={hasNoReviewPermission}
                         className="bg-gold text-white border-gold border-[1px]  rounded-md p-[6px] px-3"
                         onClick={() => handleAddRating()}
                     >

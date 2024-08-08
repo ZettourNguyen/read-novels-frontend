@@ -23,6 +23,18 @@ export default function useNotification() {
     };
 
     // Hàm để thêm thông báo
+    const changeStateIsSeen = async () => {
+        try {
+            if (user) {
+                const response = await axiosInstance.post(`/notification/${user.id}`);
+                console.log(response.data);
+            }
+        } catch (error) {
+            actionNotification('Xem thông báo thất bại.', 'error');
+        }
+    };
+    
+
     const addNotification = async (data: any) => { // Thay `any` bằng kiểu dữ liệu phù hợp
         try {
             const response = await axiosInstance.post(`/notification`, data);
@@ -49,5 +61,5 @@ export default function useNotification() {
         fetchNotifications();
     }, [user]);
 
-    return { notifications, fetchNotifications, addNotification, addNotificationByAdmin };
+    return { notifications, fetchNotifications, changeStateIsSeen, addNotification, addNotificationByAdmin };
 }

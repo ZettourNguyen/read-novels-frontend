@@ -11,33 +11,35 @@ export interface IPermissionI {
 
 export const useUserPermission = () => {
     const user = useSelector((state: RootState) => state.auth.user);
-
+  
     const [permissions, setPermissions] = useState<IPermissionI[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+  
     useEffect(() => {
-        const fetchPermissions = async () => {
-            if (user?.id) {
-                try {
-                    const response = await axiosInstance.get(`/role/${user.id}`);
-                    setPermissions(response.data[0]); // Giả sử dữ liệu nằm trong mảng đầu tiên
-                } catch (error: any) {
-                    setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
-                } finally {
-                    setLoading(false);
-                }
-            } else {
-                setLoading(false);
-                setError('Người dùng không hợp lệ');
-            }
-        };
-
-        fetchPermissions();
+      const fetchPermissions = async () => {
+        if (user?.id) {
+          try {
+            const response = await axiosInstance.get(`/role/${user.id}`);
+            // Giả sử response.data là một mảng các mảng quyền
+            const allPermissions = response.data.flat(); // Kết hợp tất cả các mảng thành một mảng duy nhất
+            setPermissions(allPermissions);
+          } catch (error: any) {
+            setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          setLoading(false);
+          setError('Người dùng không hợp lệ');
+        }
+      };
+  
+      fetchPermissions();
     }, [user?.id]);
-
+  
     return { permissions, loading, error };
-};
+  };
 
 export const useRolePermission = (roleId: string | undefined) => {
     const user = useSelector((state: RootState) => state.auth.user);

@@ -88,15 +88,17 @@ export default function ManagerRole() {
                      params:{ roleId :selectedRoleId  }
                   });
                 actionNotification(`Xóa vai trò thành công`, "success");
-
                 refetch()
+                closeModal()
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const errorMessage = error.response?.data?.message || 'Đã xảy ra lỗi không xác định.';
                 actionNotification(`${errorMessage}`, "error");
+                closeModal()
             } else {
                 actionNotification(`Đăng nhập thất bại.`, "error");
+                closeModal()
             }
         }
     }
@@ -196,7 +198,6 @@ export default function ManagerRole() {
                                                     className="bg-[#ED9A96] hover:bg-red text-white font-bold py-1 px-2 rounded"
                                                     title="Xóa truyện"
                                                     onClick={() => openModal(role.id)} 
-                                                    // Đảm bảo đây là một hàm
                                                 >
                                                     <MdDelete />
                                                 </ButtonWithTooltip>

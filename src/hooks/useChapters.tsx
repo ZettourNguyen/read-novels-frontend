@@ -14,6 +14,7 @@ export interface IAddChaptersI {
 export interface IChaptersDetailsI {
     id: number;
     title: string;
+    content: string
     novelId: number;
     createdAt: string;
     updatedAt: string;
@@ -64,6 +65,7 @@ export const useArrChaptersDetails = (data: IArrChaptersDetailsI) => {
             } else {
                 response = await axiosInstance.get(`/chapter/novelAll/${data.novelId}`);
             }
+            console.log(response.data)
             setArrChapters(response.data);
         } catch (error: any) {
             setError(error.message || 'An error occurred');
@@ -76,7 +78,7 @@ export const useArrChaptersDetails = (data: IArrChaptersDetailsI) => {
         fetchArrChapterOfNovel();
     }, [fetchArrChapterOfNovel]);
 
-    return { ArrChapters, loading, error };
+    return { ArrChapters, loading, error, refetch: fetchArrChapterOfNovel };
 };
 
 export const useGetChapterContent = (chapterId: number) => {

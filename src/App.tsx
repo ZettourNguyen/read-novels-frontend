@@ -34,6 +34,7 @@ import ManagerRolePermission from "./Page/Manager/ManagerRolePermission";
 import AccountPage from "./Page/User/Setup/account";
 import BookmarkPage from "./Page/User/Setup/userBookmark";
 import FollowedPage from "./Page/User/Setup/userFollowed";
+import ManagerAuthor from "./Page/Manager/ManagerAuthor";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
 
           <Route path="/manager" element={<Manager />} >
             <Route path="ManagerCategory" element={<ManagerCategory />} />
+            <Route path="ManagerAuthor" element={<ManagerAuthor />} />
             <Route path="ManagerTag" element={<ManagerTag />} />
             <Route path="ManagerUser" element={<ManagerUser />} />
             <Route path="ManagerRole" element={<ManagerRole />} />

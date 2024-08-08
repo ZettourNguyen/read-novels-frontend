@@ -17,6 +17,9 @@ export default function Manager() {
     useEffect(() => {
         const path = location.pathname.split("/").pop();
         switch (path) {
+            case "ManagerAuthor":
+                setActiveForm("ManagerAuthor");
+                break;
             case "ManagerCategory":
                 setActiveForm("ManagerCategory");
                 break;
@@ -63,6 +66,17 @@ export default function Manager() {
                         <img src={Logo} alt="Logo" className="flex " />
                     </div>
                 </Link>
+                {hasPermission("ManagerAuthor") && (
+                    <Link to="ManagerAuthor">
+                        <div
+                            className={`py-2 my-1 hover:bg-sky_blue_light hover:text-white rounded-md px-2
+                            ${activeForm === "ManagerAuthor" ? "font-bold bg-sky_blue_light pl-2 text-white" : "text-gray_text"}`}
+                            onClick={() => setActiveForm("ManagerAuthor")}
+                        >
+                            Quản Lý Tác giả
+                        </div>
+                    </Link>
+                )}
 
                 {hasPermission("ManagerCategory") && (
                     <Link to="ManagerCategory">

@@ -4,6 +4,8 @@ import { IChapterInputI, useNovel } from "@/hooks/useNovel";
 import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/Loading";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { Link, useParams } from "react-router-dom";
 import { useAddChapters } from "@/hooks/useChapters";
 import axios from "axios";
@@ -34,7 +36,7 @@ export default function PublishChapter() {
         setIsPublish(event.target.checked);
     };
     const { createChapterAPI, loading, error } = useNovel();
-    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);   
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
     const upLoadChapter = async () => {
         console.log(isButtonDisabled)
         if (isButtonDisabled) return;
@@ -63,7 +65,6 @@ export default function PublishChapter() {
             setIsButtonDisabled(true);
             if (chapter) {
                 actionNotification("upLoadChapter completed successfully!", 'success');
-
                 setTimeout(() => {
                     window.location.reload();
                 }, 1200);
@@ -80,8 +81,6 @@ export default function PublishChapter() {
                 setIsButtonDisabled(false); // Kích hoạt lại nút sau 3 giây
             }, 1701);
         }
-
-        if (loading) return <div><Loading /></div>;
         if (error) {
             actionNotification("upLoadChapter Error!", 'error');
             return <div>Error: {error}</div>
@@ -92,7 +91,13 @@ export default function PublishChapter() {
     return (
         <div className="bg-white h-max w-[100%] mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
             <ToastContainer />
-            
+            {loading && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                     z-50 flex items-center justify-center h-52 w-96 bg-gray_hover bg-opacity-50 rounded-lg shadow-md p-4">
+                    <CircularProgress className="mr-3"/>
+                    Đang tải
+                </div>
+            )}
             <div className="mx-5">
                 <div className="h-6"></div>
 
@@ -104,7 +109,7 @@ export default function PublishChapter() {
                                 className="flex items-center gap-2 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
                                 title=""
                             >
-                                <FaRegRectangleList size={23}/> Truyện
+                                <FaRegRectangleList size={23} /> Truyện
                             </ButtonWithTooltip>
                         </Link>
                         <Link to={`../published/list-chapters/${propsChapter?.novelId}`}>
@@ -112,7 +117,7 @@ export default function PublishChapter() {
                                 className="flex items-center gap-2 bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-semibold py-2 px-6 rounded"
                                 title=""
                             >
-                                <FaRegRectangleList size={23}/> Chương
+                                <FaRegRectangleList size={23} /> Chương
                             </ButtonWithTooltip>
                         </Link>
                     </div>

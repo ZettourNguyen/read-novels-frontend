@@ -11,6 +11,8 @@ import { RootState } from "@/store/store";
 import { getRoleName } from "@/hooks/useRole";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FiInfo } from "react-icons/fi";
+import { TiTick } from "react-icons/ti";
+import { IoCloseSharp } from "react-icons/io5";
 
 export default function ManagerRolePermission() {
     const { roleId } = useParams<{ roleId: string }>();
@@ -109,7 +111,7 @@ export default function ManagerRolePermission() {
                                     <th className="border-y border-gray px-3 py-2 text-center">STT</th>
                                     <th className="border-y border-gray px-3 py-2 max-w-[450px] text-center truncate">Tên vai trò</th>
                                     <th className="border-y border-gray px-3 py-2 text-center">Mô tả</th>
-                                    {roleName === "SuperAdmin" || <th className="border-y border-gray px-3 py-2 text-center">Hành động</th>}
+                                    {roleName === "SupeAdmin" || <th className="border-y border-gray px-3 py-2 text-center">Hành động</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,12 +120,34 @@ export default function ManagerRolePermission() {
                                         <td className=" px-3 py-2 text-center">{index + 1}</td>
                                         <td className=" px-3 py-2 text-center truncate max-w-[120px] ">{permission.name}</td>
                                         <td className=" px-3 py-2 text-center max-w-[150px]">{permission.description}</td>
-                                        {roleName === "SuperAdmin" ||
+                                        {roleName === "SuperAdmin" ?
+                                            <td className="px-3 py-2 text-center border-collapse">
+                                                <div className="flex justify-center items-center space-x-1">
+                                                    {!permissionIds.has(permission.id) ? (
+                                                        // Nếu permission có trong danh sách permissions, chỉ hiển thị nút Xóa quyền
+                                                        <ButtonWithTooltip 
+                                                            className="text-red font-bold py-1 px-2 rounded"
+                                                            title="Không sở hữu"
+                                                        >
+                                                            <IoCloseSharp size={23} />
+                                                        </ButtonWithTooltip>
+                                                    ) : (
+                                                        // Nếu không có trong danh sách permissions, chỉ hiển thị nút Thêm quyền
+                                                        <ButtonWithTooltip
+                                                            className="text-green font-bold py-1 px-2 rounded"
+                                                            title="Sở hữu"
+                                                        >
+                                                            <TiTick size={25} />
+                                                        </ButtonWithTooltip>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            :
                                             <td className="px-3 py-2 text-center border-collapse">
                                                 <div className="flex justify-center items-center space-x-1">
                                                     {permissionIds.has(permission.id) ? (
                                                         // Nếu permission có trong danh sách permissions, chỉ hiển thị nút Xóa quyền
-                                                        <ButtonWithTooltip
+                                                        <ButtonWithTooltip 
                                                             className="text-red font-bold py-1 px-2 rounded"
                                                             title="Xóa quyền"
                                                             onClick={() => handleRemoveRoleToPermission(permission.id)}

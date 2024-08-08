@@ -9,7 +9,10 @@ import axiosInstance from "@/api";
 import actionNotification from "@/components/NotificationState/Toast";
 import { ToastContainer } from "react-toastify";
 import { IoMdCloseCircle } from "react-icons/io";
-
+import { storage } from "@/store/firebaseConfig";
+import axios from "axios";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import * as fs from 'fs';
 export default function ListChaptersInNovel() {
     const { novelId } = useParams<{ novelId: string }>();
     const novelIdNumber = Number(novelId);
@@ -18,18 +21,44 @@ export default function ListChaptersInNovel() {
         novelId: novelIdNumber,
         publishedOnly: false
     }
-    const { ArrChapters, loading, error } = useArrChaptersDetails(data);
+    const { ArrChapters, loading, error, refetch } = useArrChaptersDetails(data);
 
     const [chapters, setChapters] = useState(ArrChapters);
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const openPopup = () => setPopupOpen(true);
+    const [contentChapter, setContent] = useState('');
+    const [contentLength, setContentLength] = useState(0);
+    const [chapterTitle, setChapterTitle] = useState('');
+
+    const [contentUrl, setContentUrl] = useState('');
+    const [selectedId, setSelectedId] = useState<number>(0);
+
+    const openPopup = async (id: number, title: string, content: string) => {
+        setChapterTitle(title)
+        setPopupOpen(true);
+        console.log(content)
+        setSelectedId(id)
+        setContentUrl(content)
+        try {
+            // Tạo reference đến tệp trong Firebase Storage
+            const fileRef = ref(storage, content);
+            // Lấy URL tải xuống
+            console.log('Download filePath:', content);
+            const url = await getDownloadURL(fileRef);
+            // Fetch nội dung tệp
+            console.log('Download URL:', url);
+            const response = await axios.get(url, { responseType: 'text' })
+            // const text = await response.text();
+            setContent(response.data);
+        } catch (err) {
+            actionNotification('Đã xảy ra lỗi, vui lòng liên hệ admin để xử lý sớm. Xin cảm ơn', 'error');
+            console.error(err);
+        }
+
+    };
     const closePopup = () => setPopupOpen(false);
     useEffect(() => {
         setChapters(ArrChapters);
     }, [ArrChapters]);
-    const [contentChapter, setContent] = useState('');
-    const [contentLength, setContentLength] = useState(0);
-    const contentRef = useRef<HTMLTextAreaElement>(null);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -44,6 +73,37 @@ export default function ListChaptersInNovel() {
                 actionNotification("Cập nhật thất bại", "error");
                 return false; // Trả về false khi thất bại
             }
+        } catch (error) {
+            console.error("Có lỗi xảy ra khi cập nhật trạng thái:", error);
+            actionNotification("Cập nhật thất bại", "error");
+            return false; // Trả về false khi có lỗi
+        }
+    };
+
+    const updateChapter = async (id: number, contentUrl: string): Promise<boolean> => {
+        try {
+            // update content to firebase storage
+            const blob = new Blob([contentChapter], { type: 'text/plain' });
+
+            // Tạo tham chiếu đến tệp trên Firebase Storage
+            const storageRef = ref(storage, contentUrl);
+
+            // Tải Blob lên Firebase Storage
+            const snapshot = await uploadBytes(storageRef, blob);
+            console.log('Tệp đã được tải lên thành công!', snapshot);
+            const result = await axiosInstance.put(`chapter/${id}`, { title:chapterTitle });
+            setPopupOpen(false);
+            setTimeout(() => {
+                refetch() 
+            }, 1400);
+            if (result.status === 200) {
+                actionNotification("Cập nhật thành công", "success");
+                return true; // Trả về true khi thành công
+            } else {
+                actionNotification("Cập nhật thất bại", "error");
+                return false; // Trả về false khi thất bại
+            }
+            
         } catch (error) {
             console.error("Có lỗi xảy ra khi cập nhật trạng thái:", error);
             actionNotification("Cập nhật thất bại", "error");
@@ -74,6 +134,18 @@ export default function ListChaptersInNovel() {
         setContentLength(numberOfWords);
     };
     // 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChapterTitle(event.target.value);
+    };
+
+    async function handleDeleteChapter(id: number): Promise<void> {
+        try {
+            await axiosInstance.delete(`chapter/${id}`)
+            refetch()
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <div className="bg-white h-max w-[100%] mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
@@ -142,13 +214,14 @@ export default function ListChaptersInNovel() {
                                             </ButtonWithTooltip>
                                             <ButtonWithTooltip
                                                 className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-2 px-2 mr-2 rounded"
-                                                title="Sửa chương" onClick={openPopup}
+                                                title="Sửa chương" onClick={() => openPopup(chapter.id, chapter.title, chapter.content)}
                                             >
                                                 <BiSolidPencil />
                                             </ButtonWithTooltip>
                                             <ButtonWithTooltip
                                                 className="bg-[#ED9A96] hover:bg-red text-white font-bold py-2 px-2 mr-2 rounded"
                                                 title="Xóa chương"
+                                                onClick={()=> handleDeleteChapter(chapter.id)}
                                             >
                                                 <MdDelete />
                                             </ButtonWithTooltip>
@@ -196,8 +269,8 @@ export default function ListChaptersInNovel() {
                                         type="text"
                                         id="input1"
                                         name="input1"
-                                        // value={formData.input1}
-                                        // onChange={handleChange}
+                                        value={chapterTitle}
+                                        onChange={handleChange}
                                         className="mt-1 p-2 border border-gray-300 outline-none  rounded w-full"
                                     />
                                 </div>
@@ -210,7 +283,7 @@ export default function ListChaptersInNovel() {
                                         id="comments"
                                         placeholder=""
                                         rows={6}
-                                        ref={contentRef}
+                                        value={contentChapter}
                                         onChange={countLenghtChapterContent}
                                     ></textarea>
                                 </div>
@@ -219,8 +292,9 @@ export default function ListChaptersInNovel() {
 
                                     <div className="space-x-3">
                                         <button
-                                            type="submit"
+                                            type="button"
                                             className="bg-sky_blue_light ml-2 text-white px-2 py-1 rounded-md"
+                                            onClick={() => updateChapter(selectedId, contentUrl)}
                                         >
                                             Cập nhật
                                         </button>

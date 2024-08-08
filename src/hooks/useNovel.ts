@@ -74,17 +74,14 @@ export const useNovel = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-
-
     const createNovelAPI = async (novelData: INovelInputI) => {
         try {
             setLoading(true);
             setError(null);
-
             const response = await axiosInstance.post('/novel', novelData);
             console.log('Novel created successfully:', response.status);
-            return response.data
             setLoading(false);
+            return response.data
         } catch (error) {
             console.error('Error creating novel:', error);
             setError('Đã xảy ra lỗi khi tạo tiểu thuyết');
