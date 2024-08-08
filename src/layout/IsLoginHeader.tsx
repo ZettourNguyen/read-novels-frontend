@@ -53,6 +53,9 @@ function IsLoginHeader() {
   const isAdminPermission = permissions.some(permission =>
     permission.name.includes("Manager")
   );
+  const hasNoPosterPermission = permissions.some(permission =>
+    permission.name.includes("NoPost")
+  )
   // nav
   const [menuNavigate2, setMenuNavigate2] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Sử dụng useRef để tham chiếu đến phần tử menu
@@ -223,9 +226,10 @@ function IsLoginHeader() {
                         <li className="py-3 px-1 text-red hover:bg-[#efefef]">Quản lý</li>
                       </Link>
                     )}
+                    {hasNoPosterPermission && 
                     <Link to={"/uploader/published"}>
                       <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">Đăng truyện</li>
-                    </Link>
+                    </Link>}
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="/user/bookmark">Truyện đánh dấu</a></li>
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="/user/follow">Truyện theo dõi</a></li>
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="">Truyện đã đăng</a></li>
