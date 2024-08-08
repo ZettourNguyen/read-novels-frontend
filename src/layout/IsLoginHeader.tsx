@@ -226,7 +226,7 @@ function IsLoginHeader() {
                         <li className="py-3 px-1 text-red hover:bg-[#efefef]">Quản lý</li>
                       </Link>
                     )}
-                    {hasNoPosterPermission && 
+                    {!hasNoPosterPermission && 
                     <Link to={"/uploader/published"}>
                       <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">Đăng truyện</li>
                     </Link>}
