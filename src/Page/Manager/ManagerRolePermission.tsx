@@ -142,6 +142,7 @@ export default function ManagerRolePermission() {
                                                     )}
                                                 </div>
                                             </td>
+                                            // UPDATE O DAY
                                             :
                                             <td className="px-3 py-2 text-center border-collapse">
                                                 <div className="flex justify-center items-center space-x-1">
