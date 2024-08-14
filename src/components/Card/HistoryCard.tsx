@@ -25,8 +25,8 @@ export default function HistoryCard() {
 
   function handleRemoveHistory(id : number): void {
     rmHistory(id)
-    console.log(id)
     fetchHistories()
+    console.log(id)
   }
 
   return (

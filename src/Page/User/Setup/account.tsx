@@ -44,7 +44,7 @@ function AccountPage() {
 
 
   return (
-    <div>
+    <div className="md:container">
       <div className="mb-6">
       <div className="mt-10 flex ">
       <ToastContainer />

@@ -28,6 +28,8 @@ export const useGetHistoryUser = () => {
     const fetchHistories = async () => {
         if (!user?.id) return; // Kiểm tra xem user có id không
 
+        setLoading(true); // Đặt trạng thái loading trước khi gọi API
+
         try {
             const response = await axiosInstance.get(`/history/${user.id}`);
             setHistories(response.data);
@@ -40,32 +42,20 @@ export const useGetHistoryUser = () => {
 
     useEffect(() => {
         fetchHistories();
-    }, [user?.id]); // Thay đổi phụ thuộc theo user.id
+    }, [user?.id]);
 
     const rmHistory = async (id: number) => {
         try {
             await axiosInstance.delete(`/history/remove/${id}`);
+            await fetchHistories(); 
         } catch (error) {
             console.error('Error removing history:', error);
-            throw error;
+            setError('Có lỗi xảy ra khi xóa lịch sử'); 
         }
     };
 
     return { histories, loading, error, rmHistory, fetchHistories };
 };
-// export const checkHistoryExists = async(userId: number, chapterId: number) =>{
-//     try {
-//         const response = await axiosInstance.get('/history/check', {
-//             userId: userId,
-//             chapterId: chapterId
-//         });
-
-//         return response?.data
-//     } catch (error) {
-//         console.error('Error adding history:', error);
-//         throw error;
-//     }
-// }
 
 export const addHistory = async (userId: number, chapterId: number) => {
     try {

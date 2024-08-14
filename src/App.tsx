@@ -35,6 +35,8 @@ import AccountPage from "./Page/User/Setup/account";
 import BookmarkPage from "./Page/User/Setup/userBookmark";
 import FollowedPage from "./Page/User/Setup/userFollowed";
 import ManagerAuthor from "./Page/Manager/ManagerAuthor";
+import SearchNovels from "./Page/ListNovels/search";
+import AddBanner from "./Page/Manager/ManagerNovelAddBanner";
 
 
 function App() {
@@ -56,6 +58,7 @@ function App() {
             <Route path="ManagerRole" element={<ManagerRole />} />
             <Route path="ManagerPublishNovel" element={<ManagerPublishNovel />} />
             <Route path="ManagerNovel" element={<ManagerNovel />} />
+            <Route path="AddBanner/:novelId" element={<AddBanner />} />
             <Route path="ManagerReport" element={<ManagerReport />} />
             <Route path="ManagerUserRole/:userId" element={<ManagerUserRole />} />
             <Route path="ManagerRolePermission/:roleId" element={<ManagerRolePermission />} />
@@ -83,6 +86,7 @@ function App() {
           <Route path="/novel/:novelId" element={<Novel />} />
           <Route path="/novel/:novelId/:chapterId" element={<Chapter />} />
           <Route path="list/:type/:id" element={<ListNovels />} />
+          <Route path="list/search/:keyword" element={<SearchNovels />} />
           {/* <Route path="/tag/:tagId" element={<DanhSach/>} /> */}
         </Route>
       </Routes>

@@ -4,7 +4,7 @@ import {
 } from "react-icons/bi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import wideLogo from "../assets/imgs/wideLogo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBookOpen, FaExclamation, FaRegCheckCircle } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { RootState } from "@/store/store";
@@ -34,7 +34,7 @@ function IsLoginHeader() {
   const [menuNavigateNotification, setMenuNavigateNotification] = useState<boolean>(false);
   const { notifications, fetchNotifications, changeStateIsSeen } = useNotification();
   const [notificationElements, setNotificationElements] = useState<JSX.Element[]>([]);
-
+  const navigate = useNavigate();
   // notification
   const toggleOverlayNotification = () => {
     setMenuNavigateNotification(!menuNavigateNotification);
@@ -70,12 +70,18 @@ function IsLoginHeader() {
     }
   };
 
-  const handleSearch = async () => { console.log(inputSearchRef.current?.value) }
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+  const handleSearch = async () => {
+    const query = inputSearchRef.current?.value.trim();
+    if (query) {
+      navigate(`/list/search/${encodeURIComponent(query)}`);
     }
-  };
+};
+
+const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+        handleSearch();
+    }
+};
 
   const handleLogout = async () => {
     try {
@@ -186,7 +192,7 @@ function IsLoginHeader() {
           </div>
         </div>
         <div className="flex items-center justify-end">
-          <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer"
+          <div className="mr-[20px] w-[40px] h-[40px]  flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer"
             onClick={handleSearchIconClick}>
             <GoSearch size={20} />
           </div>
@@ -194,9 +200,9 @@ function IsLoginHeader() {
           <div className="mr-[20px] w-[40px] h-[40px] flex items-center justify-center text-[#969696] hover:bg-gray_light cursor-pointer relative"
             onClick={toggleOverlayNotification}>
             <div className="relative"><IoMdNotificationsOutline size={20} />
-            {notifications.some(noti => noti.type==="unseen") && (
-              <div className="absolute bottom-3 left-4 text-red"><FaExclamation size={12} /></div>
-            )}
+              {notifications.some(noti => noti.type === "unseen") && (
+                <div className="absolute bottom-3 left-4 text-red"><FaExclamation size={12} /></div>
+              )}
 
             </div>
             {menuNavigateNotification && (
@@ -226,10 +232,10 @@ function IsLoginHeader() {
                         <li className="py-3 px-1 text-red hover:bg-[#efefef]">Quản lý</li>
                       </Link>
                     )}
-                    {!hasNoPosterPermission && 
-                    <Link to={"/uploader/published"}>
-                      <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">Đăng truyện</li>
-                    </Link>}
+                    {!hasNoPosterPermission &&
+                      <Link to={"/uploader/published"}>
+                        <li className="py-3 px-1 border-gray border-t hover:bg-[#efefef]">Đăng truyện</li>
+                      </Link>}
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="/user/bookmark">Truyện đánh dấu</a></li>
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="/user/follow">Truyện theo dõi</a></li>
                     <li className="py-3 px-1 hover:bg-[#efefef]"><a href="">Truyện đã đăng</a></li>
@@ -243,14 +249,17 @@ function IsLoginHeader() {
       </div>
       <div className='md:container '>
         {isInputVisible && (
-          <div className="mt-2 flex border border-gray items-center px-4" onKeyDown={handleInputKeyDown}>
+          <div className="mt-2 flex border border-gray items-center pl-4" onKeyDown={handleInputKeyDown}>
             <input
               type="text"
               ref={inputSearchRef}
               className="w-[100%] p-2 border-0 border-gray z-10 outline-none"
               placeholder="Tìm kiếm tên truyện, tác giả..."
             />
-            <GoSearch size={25} onClick={handleSearch} />
+            <div className="hover:bg-gray_hover p-2 px-3">
+
+              <GoSearch size={22} onClick={handleSearch} />
+            </div>
           </div>
         )}
       </div>

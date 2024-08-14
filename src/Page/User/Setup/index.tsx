@@ -8,7 +8,7 @@ function UserSetup() {
 
   return (
     <div>
-      <div className="m-10 flex justify-center">
+      <div className="mx-10 mt-2 flex justify-center">
         <div className="w-[45vw] relative">
           {/* setting option */}
           <ul className="fixed top-40 transform translate-x-[-220%] rounded-md">
@@ -43,7 +43,7 @@ function UserSetup() {
         </div>
 
       </div>
-      <div className='md:container'>
+      <div className=''>
         <Outlet />
       </div>
     </div>

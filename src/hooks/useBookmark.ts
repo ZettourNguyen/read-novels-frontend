@@ -101,12 +101,14 @@ export default function useGetBookmark() {
 
     useEffect(() => {
         getAll();
-    }, [bookmark]); // Chỉ gọi getAll khi user thay đổi
+    }, [user]); // Chỉ gọi getAll khi user thay đổi
 
     const removeBookmark = async (bookmarkId: number) => {
         try {
             const response = await axiosInstance.delete(`/bookmark/delete/${bookmarkId}`);
             actionNotification("Đã bỏ cất giữ", "success")
+            getAll();
+
         } catch (error) {
             actionNotification("Bỏ cất giữ thất bại", "error")
         }

@@ -1,43 +1,33 @@
-import React from 'react'
+import { useBanner } from '@/hooks/useNovel';
+import React from 'react';
 
-
-interface Item {
-    name: string;
-    href: string;
-    src: string;
+interface Banner {
+    id: string;
+    title: string;
+    banner: string;
 }
 
-const list: Item[] = [
-    {
-        name: 'Lãnh Chúa Thời Đại: Ta Phần Thưởng X100 Lần Tăng Phúc',
-        href: 'https://metruyencv.com/truyen/lanh-chua-thoi-dai-ta-phan-thuong-x100-lan-tang-phuc',
-        src: 'https://static.cdnno.com/storage/topbox/dfa26ce246e4d1a1c6a23ff7549f2598.webp'
-    },
-    {
-        name: 'Dân Tục: Trẻ Sơ Sinh Bắt Đầu, Mẫu Thân Cởi Ra Mặt Nạ',
-        href: 'https://metruyencv.com/truyen/moi-ngay-deu-muon-cung-ta-mat-na-quy-mau-than-noi-ngu-ngon',
-        src: 'https://static.cdnno.com/storage/topbox/07211fcd8eead576ba16142aecf0f9a2.webp'
-    },
-    {
-        name: 'Ta Bán Hủ Tiếu Tại Dị Giới',
-        href: 'https://vtruyen.com/truyen/di-ban-hu-tieu-tai-di-gioi',
-        src: 'https://static.cdnno.com/storage/topbox/08e1c8f41a9e48d4dacd979eea4fdaaa.webp '
-    },
-];
-
-
 function Banner() {
-    const randomItem = list[Math.floor(Math.random() * list.length)];
+    const { novels, loading, error, refetch: fetchMyPublishedNovels } = useBanner();
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    if (!novels || novels.length === 0) return <p>No data available</p>;
+
+    const randomItem = novels[Math.floor(Math.random() * novels.length)];
+
+    if (!randomItem) return <p>No novel found</p>;
 
     return (
-        <div className='flex justify-centerh-[515px]s bg-cover items-center '>
-            <div className="md:container mx-auto flex-1 ">
-                <a href={randomItem.href}>
-                <img className='w-[1016px]' src={randomItem.src} alt={randomItem.name} />
+        <div className='flex justify-center h-[254] bg-cover items-center'>
+            <div className="md:container my-0 mx-auto flex-1">
+                <a href={`/novel/${randomItem.id}`}>
+                    <img className='w-[1016px]' src={randomItem.banner} alt={randomItem.title} />
                 </a>
             </div>
         </div>
-    )
+    );
 }
 
-export default Banner
+export default Banner;

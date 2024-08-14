@@ -14,6 +14,7 @@ import { FiInfo } from "react-icons/fi";
 import { ToastContainer } from "react-toastify";
 import actionNotification from "@/components/NotificationState/Toast";
 import axios from "axios";
+import CustomModal from "@/components/Popup/ConfirmPopupModal";
 export default function Published() {
     const user = useSelector((state: RootState) => state.auth.user);
     const [selectedOption, setSelectedOption] = useState('');
@@ -22,7 +23,8 @@ export default function Published() {
     const userId = user?.id.toString() || '0';
     const { novels, loading, error, refetch } = useNovelsByPoster(userId);
     const numberChapterPublishNovel = 2
-
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [novelIdSelected, setSelectedNovelId] = useState<number | null>(null);
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,10 +42,16 @@ export default function Published() {
         unpublished: "Chưa xuất bản",
         pending: "Đang chờ duyệt"
     };
+    const confirmDeleteResult = () => {
+        if (novelIdSelected !== null) {
+            handleChangeState(novelIdSelected, "deleted")
+        }
+    }
     const handleChangeState = async (novelId: number, state: string) => {
         try {
             const response = await axiosInstance.put(`/novel/state/${novelId}`, { state });
             actionNotification("Đã xử lý thành công", "success")
+            closeModal()
             refetch();
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -66,18 +74,26 @@ export default function Published() {
                     && novel.title.toLowerCase().includes(searchTerm.toLowerCase());
             }
         });
+    const openModal = (id: number) => {
+        setSelectedNovelId(id);
+        setIsModalOpen(true);
+    };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedNovelId(null);
+    };
 
     return (
         <div className="bg-white h-max w-[100%]  mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
             <div className="mx-5">
                 <div className="h-6"></div>
                 <div>
-                <ToastContainer></ToastContainer>
+                    <ToastContainer></ToastContainer>
 
                     <div className="flex justify-between flex-wrap">
-                        
+
                         <div className="flex flex-wrap-reverse my-2">
-                            
+
                             <div className="border border-gray flex rounded-md items-center p-[2px]">
                                 <BiSearchAlt size={25} color="#969696" className="" />
                                 <input
@@ -100,7 +116,7 @@ export default function Published() {
                                     </div>
                                 )}
                         </div>
-                        
+
                         <div className="flex">
                             <div className="border border-gray flex rounded-md items-center mr-4">
                                 <select
@@ -207,10 +223,12 @@ export default function Published() {
                                                         <ButtonWithTooltip
                                                             className="bg-[#ED9A96] hover:bg-red text-white font-bold py-2 px-2 mr-0 rounded"
                                                             title="Xóa truyện"
-                                                            onClick={() => handleChangeState(novel.id, "deleted")} // Đảm bảo đây là một hàm
+                                                            // onClick={() => handleChangeState(novel.id, "deleted")} // Đảm bảo đây là một hàm
+                                                            onClick={() => openModal(novel.id)}
                                                         >
                                                             <MdDelete />
                                                         </ButtonWithTooltip>
+
                                                     </div>
                                                 )}
                                         </td>
@@ -218,6 +236,13 @@ export default function Published() {
                                 ))}
                             </tbody>
                         </table>
+                        <CustomModal
+                            isOpen={isModalOpen}
+                            onRequestClose={closeModal}
+                            title="Xác nhận xóa"
+                            onConfirm={confirmDeleteResult}
+                            onCancel={closeModal}
+                        />
                     </div>
                 </div>
                 <div className="h-6"></div>

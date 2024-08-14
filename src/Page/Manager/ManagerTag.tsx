@@ -51,7 +51,6 @@ export default function ManagerTag() {
                     closeModal();
                     actionNotification("Xóa thành công", "success")
                     refetch()
-
                 }
             } catch (error) {
                 if (axios.isAxiosError(error)) {

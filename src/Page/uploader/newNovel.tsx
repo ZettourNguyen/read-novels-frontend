@@ -318,7 +318,10 @@ export default function NewNovel() {
                             </div>
                         </div>
                     )}
-                    {uploadImageCover && <CropperImage onCropComplete={handleCropComplete} />}
+                    {uploadImageCover &&  <CropperImage
+                        onCropComplete={handleCropComplete}
+                        size={{ width: 300, height: 400 }} 
+                    />}
                     {croppedImage && (
                         <div className="mt-5">
 

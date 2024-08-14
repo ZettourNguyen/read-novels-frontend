@@ -45,11 +45,8 @@ export default function NovelComments({ novelId }: { novelId: number }) {
     const { permissions } = useUserPermission();
     const hasNoCommentPermission = permissions.some(permission =>
         permission.name.includes("NoComment")
-      );
-      const hasCommentPermission = !hasNoCommentPermission && permissions.some(permission =>
-        permission.name.includes("PostComment")
-      );
-    
+    );
+
     // Fetch comments on component mount
     useEffect(() => {
         const fetchComments = async () => {
@@ -121,9 +118,9 @@ export default function NovelComments({ novelId }: { novelId: number }) {
     };
 
     const handleReport = (reportText: string) => {
-        if(!user){
+        if (!user) {
             actionNotification("Bạn phải đăng nhập để thực hiện hành động này", "warning")
-        }else{
+        } else {
             const data = {
                 title: `Báo cáo comment id: ${novelId}`,
                 novelId,
@@ -145,8 +142,8 @@ export default function NovelComments({ novelId }: { novelId: number }) {
             <ToastContainer />
             <div className="relative border-x-[2px] border-x-gray_light p-3 bg-white rounded-b-lg">
                 <div className="bg-white rounded-lg rounded-t-lg m-2">
-                    <textarea disabled={!hasCommentPermission}
-                        className={`${hasCommentPermission? "": 'bg-gray_hover text-gray cursor-not-allowed'}  p-4 mb-2 w-full focus:ring-0 focus:outline-none rounded-md mt-2 dark:text-white
+                    <textarea disabled={hasNoCommentPermission}
+                        className={`${!hasNoCommentPermission ? "" : 'bg-gray_hover text-gray cursor-not-allowed'}  p-4 mb-2 w-full focus:ring-0 focus:outline-none rounded-md mt-2 dark:text-white
                         border-[1px] border-gray overflow-hidden break-words resize-none text-start h-40 overflow-y-auto`}
                         placeholder="Nhập bình luận. Cảnh báo: nghiêm cấm vô não chửi bậy, chửi liên quan đến thể loại truyện, mô típ của truyện, bối cảnh của truyện. Nghiêm cấm bình luận chống lại nhà nước, danh nhân lịch sử, người vi phạm sẽ bị khóa tài khoản tùy mức độ."
                         ref={commentRef}
@@ -154,7 +151,7 @@ export default function NovelComments({ novelId }: { novelId: number }) {
                     />
                 </div>
                 <div className="absolute bottom-[45px] right-[35px]">
-                    <button disabled={!hasCommentPermission}
+                    <button disabled={hasNoCommentPermission}
                         className="bg-gold text-white border-gold border-[1px] rounded-md p-1 px-2"
                         onClick={() => handleAddComment("parent")}
                     >
@@ -184,7 +181,7 @@ export default function NovelComments({ novelId }: { novelId: number }) {
                                     <HiOutlineChatBubbleLeftEllipsis size={15} className="self-center" />
                                     <p className="text-sm">{comment.replies.length} Trả lời</p>
                                 </div>
-                                <div onClick={()=> handleSetCommentId(comment.id)} className="h-1 ml-2 text-sm"><ReportForm onSubmit={handleReport} /></div>
+                                <div onClick={() => handleSetCommentId(comment.id)} className="h-1 ml-2 text-sm"><ReportForm onSubmit={handleReport} /></div>
                             </div>
                             {showReplyInput === comment.id && (
                                 <div className="pl-14 mt-5">
@@ -210,12 +207,12 @@ export default function NovelComments({ novelId }: { novelId: number }) {
                                         </div>
                                     ))}
                                     <div className="relative">
-                                        <textarea disabled={!hasCommentPermission}
-                                            className={`${hasCommentPermission? "": 'bg-gray_hover text-gray cursor-not-allowed'} 
+                                        <textarea disabled={hasNoCommentPermission}
+                                            className={`${!hasNoCommentPermission ? "" : 'bg-gray_hover text-gray cursor-not-allowed'} 
                                             p-3 mb-2 w-full focus:ring-0 focus:outline-none rounded-md mt-2 
                                             dark:text-white border-[1px] border-gray overflow-hidden 
-                                            break-words resize-none text-start h-15 overflow-y-auto"
-                                            placeholder="Trả lời bình luận`}
+                                            break-words resize-none text-start h-15 overflow-y-auto"`}
+                                            placeholder="Trả lời bình luận"
                                             ref={replyRef}
                                             onChange={handleReplyChange}
                                         />

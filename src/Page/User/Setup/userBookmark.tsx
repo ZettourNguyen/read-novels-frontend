@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { convertTo24Hour } from "@/store/Time";
 import { useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
+import Banner from "@/components/Banner";
 
 export default function BookmarkPage() {
   const { bookmark, loading, error, removeBookmark, refetch } = useGetBookmark();
@@ -33,13 +34,15 @@ export default function BookmarkPage() {
   }
 
   return (
-    <div className="">
-      <div className="border border-gray flex rounded-md items-center p-[2px] mb-3">
+    <div>
+      <Banner></Banner>
+    <div className="md:container mt-5">
+      <div className="border mt-2 border-gray flex rounded-md items-center p-[2px] mb-3">
         <BiSearchAlt size={25} color="#969696" className="ml-2" />
         <input
           type="text"
           placeholder="Tìm kiếm"
-          className="p-2 outline-none"
+          className="p-2 outline-none w-full"
           value={searchTerm}
           onChange={handleSearchChange}
         />
@@ -84,6 +87,7 @@ export default function BookmarkPage() {
       ) : (
         <div>Không có dữ liệu để hiển thị.</div>
       )}
+    </div> 
     </div>
-  );
+  );   
 }

@@ -13,6 +13,7 @@ import { storage } from "@/store/firebaseConfig";
 import axios from "axios";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import * as fs from 'fs';
+import CustomModal from "@/components/Popup/ConfirmPopupModal";
 export default function ListChaptersInNovel() {
     const { novelId } = useParams<{ novelId: string }>();
     const novelIdNumber = Number(novelId);
@@ -31,7 +32,8 @@ export default function ListChaptersInNovel() {
 
     const [contentUrl, setContentUrl] = useState('');
     const [selectedId, setSelectedId] = useState<number>(0);
-
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [novelIdSelected, setSelectedNovelId] = useState<number | null>(null);
     const openPopup = async (id: number, title: string, content: string) => {
         setChapterTitle(title)
         setPopupOpen(true);
@@ -91,10 +93,10 @@ export default function ListChaptersInNovel() {
             // Tải Blob lên Firebase Storage
             const snapshot = await uploadBytes(storageRef, blob);
             console.log('Tệp đã được tải lên thành công!', snapshot);
-            const result = await axiosInstance.put(`chapter/${id}`, { title:chapterTitle });
+            const result = await axiosInstance.put(`chapter/${id}`, { title: chapterTitle });
             setPopupOpen(false);
             setTimeout(() => {
-                refetch() 
+                refetch()
             }, 1400);
             if (result.status === 200) {
                 actionNotification("Cập nhật thành công", "success");
@@ -103,7 +105,7 @@ export default function ListChaptersInNovel() {
                 actionNotification("Cập nhật thất bại", "error");
                 return false; // Trả về false khi thất bại
             }
-            
+
         } catch (error) {
             console.error("Có lỗi xảy ra khi cập nhật trạng thái:", error);
             actionNotification("Cập nhật thất bại", "error");
@@ -138,15 +140,32 @@ export default function ListChaptersInNovel() {
         setChapterTitle(event.target.value);
     };
 
-    async function handleDeleteChapter(id: number): Promise<void> {
-        try {
-            await axiosInstance.delete(`chapter/${id}`)
-            refetch()
-        } catch (error) {
-            
+    async function handleDeleteChapter(): Promise<void> {
+        if (novelIdSelected !== null) {
+            try {
+                await axiosInstance.delete(`chapter/${novelIdSelected}`)
+                closeModal();
+                refetch()
+                actionNotification("Xóa thành công", "success")
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    const errorMessage = error.response?.data?.message || 'Đã xảy ra lỗi không xác định.';
+                    actionNotification(`${errorMessage}`, "error");
+                } else {
+                    actionNotification(`Thêm thất bại!!!\n Đã xảy ra lỗi không xác định.`, "error");
+                }
+            }
         }
     }
 
+    const openModal = (id: number) => {
+        setSelectedNovelId(id);
+        setIsModalOpen(true);
+    };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedNovelId(null);
+    };
     return (
         <div className="bg-white h-max w-[100%] mx-auto my-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md">
             <ToastContainer />
@@ -221,7 +240,7 @@ export default function ListChaptersInNovel() {
                                             <ButtonWithTooltip
                                                 className="bg-[#ED9A96] hover:bg-red text-white font-bold py-2 px-2 mr-2 rounded"
                                                 title="Xóa chương"
-                                                onClick={()=> handleDeleteChapter(chapter.id)}
+                                                onClick={() => openModal(chapter.id)}
                                             >
                                                 <MdDelete />
                                             </ButtonWithTooltip>
@@ -230,6 +249,13 @@ export default function ListChaptersInNovel() {
                                 ))}
                             </tbody>
                         </table>
+                        <CustomModal
+                            isOpen={isModalOpen}
+                            onRequestClose={closeModal}
+                            title="Xác nhận xóa"
+                            onConfirm={handleDeleteChapter}
+                            onCancel={closeModal}
+                        />
                     </div>
                     <div className="flex justify-between items-center mt-4">
                         <div className="font-semibold text-lg">{propsChapter?.novelTitle}</div>

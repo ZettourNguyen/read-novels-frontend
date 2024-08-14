@@ -8,7 +8,7 @@ import { IAuthorI } from "./useAuthor";
 export function useFollow(novelId: number) {
     const user = useSelector((state: RootState) => state.auth.user);
     const [idFollow, setIsFollow] = useState<number>(0);
-    
+
     const fetchFollowStatus = async () => {
         try {
             if (user) {
@@ -100,11 +100,12 @@ export function useGetFollow() {
 
     useEffect(() => {
         getAll();
-    }, [bookmark]); // Chỉ gọi getAll khi user thay đổi
+    }, [user]); // Chỉ gọi getAll khi user thay đổi
 
     const removeBookmark = async (bookmarkId: number) => {
         try {
             const response = await axiosInstance.delete(`/follow/delete/${bookmarkId}`);
+            getAll();
             actionNotification("Đã bỏ đánh dấu", "success")
         } catch (error) {
             actionNotification("Bỏ đánh dấu thất bại", "error")

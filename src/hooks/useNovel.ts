@@ -6,6 +6,7 @@ import { LoaddingListProps, NovelCardFull } from '@/Page/ListNovels';
 import { INovelI, INovelInputI } from '@/Page/Novel/Novel.interface';
 import { useEffect, useState } from 'react';
 import { IAuthorI } from './useAuthor';
+import Banner from '@/components/Banner';
 
 export interface IChapterInputI {
     title: string,
@@ -137,6 +138,33 @@ export interface NovelPublishedProps {
     posterId: number,
     posterName: string
 }
+export const useBanner = () => {
+    const [novels, setNovels] = useState<Banner[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchMyPublishedNovels = async () => {
+        try {
+            const response = await axiosInstance.get(`/novel/banner/a`);
+            setNovels(response.data);
+        } catch (error: any) {
+            setError(error.message || 'An error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchMyPublishedNovels();
+    }, []);
+
+    // Thêm useEffect để theo dõi sự thay đổi của novels
+    useEffect(() => {
+        console.log('Novels updated:', novels);
+    }, [novels]);
+
+    return { novels, loading, error, refetch: fetchMyPublishedNovels };
+};
 
 export const useNovelsByPoster = (posterId: any) => {
     const [novels, setNovels] = useState<NovelPublishedProps[]>([]);
@@ -179,10 +207,10 @@ export const useRandomNovels = () => {
         }
     };
     useEffect(() => {
-            fetchMyPublishedNovels();
+        fetchMyPublishedNovels();
     }, []);
 
-    return { randomNovels, loading, error, refetch:fetchMyPublishedNovels };
+    return { randomNovels, loading, error, refetch: fetchMyPublishedNovels };
 };
 
 export const useNovelDetails = (novelId: number) => {
@@ -261,6 +289,7 @@ export const useListNovels = ({ type, id }: LoaddingListProps) => {
     const [novelsList, setListNovel] = useState<NovelCardFull[]>([]);
     const [loadingList, setLoading] = useState(true);
     const [errorList, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchUseLastNovesl = async () => {
             try {
@@ -280,11 +309,41 @@ export const useListNovels = ({ type, id }: LoaddingListProps) => {
 
     return { novelsList, loadingList, errorList };
 };
+export const useSearchNovels = (keyword: string) => {
+    const [novelsList, setListNovel] = useState<NovelCardFull[]>([]);
+    const [loadingList, setLoading] = useState(true);
+    const [errorList, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchSearchNovel = async () => {
+            try {
+                setLoading(true);
+                const response = await axiosInstance.get(`/novel/search`, {
+                    params: { keyword },
+                });
+                setListNovel(response.data); 
+                setLoading(false);
+            } catch (error) {
+                console.error('Error searching novels:', error);
+                setError('Có lỗi xảy ra khi tìm kiếm tiểu thuyết.');
+                setLoading(false);
+            }
+        };
+
+        if (keyword.trim()) { 
+            fetchSearchNovel();
+        } else {
+            setListNovel([]); 
+        }
+    }, [keyword]); 
+
+    return { novelsList, loadingList, errorList };
+};
 export const useAllNovel = () => {
     const [novelsAll, setListNovel] = useState<NovelPublishedProps[]>([]);
     const [loadingAll, setLoading] = useState(true);
     const [errorAll, setError] = useState<string | null>(null);
+
     const fetchUseAllNovesl = async () => {
         try {
             const response = await axiosInstance.get(`/novel/`);

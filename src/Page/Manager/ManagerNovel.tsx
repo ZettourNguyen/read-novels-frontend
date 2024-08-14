@@ -7,9 +7,10 @@ import { useRoleList } from "@/hooks/useRole";
 import { RootState } from "@/store/store";
 import { timeAgo } from "@/store/Time";
 import { useState } from "react";
-import { BiSearchAlt, BiSolidBookAdd } from "react-icons/bi";
+import { BiSearchAlt, BiSolidBookAdd, BiSolidImageAdd } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 export default function ManagerNovel() {
@@ -158,14 +159,14 @@ export default function ManagerNovel() {
                                         <td className=" px-3 py-2 text-center">{timeAgo(novel.createdAt)}</td>
                                         <td className="px-3 py-2 text-center border-collapse">
                                             <div className="flex justify-center items-center space-x-2">
-                                                {/* <Link to={`edit-novel/${novel.id}`}>
+                                                <Link to={`../AddBanner/${novel.id}`}>
                                                     <ButtonWithTooltip
                                                         className="bg-sky_blue_light_500 hover:bg-sky_blue_light text-white font-bold py-1 px-2 rounded"
-                                                        title="Sửa truyện"
+                                                        title="Thêm Banner"
                                                     >
-                                                        <BiSolidPencil />
+                                                        <BiSolidImageAdd />
                                                     </ButtonWithTooltip>
-                                                </Link> */}
+                                                </Link>
                                                 {novel.state === "deleted" ?
                                                     <div 
                                                     className="bg-[#ED9A96] hover:bg-red cursor-pointer text-white font-bold py-2 px-2 mr-0 rounded"                                                    

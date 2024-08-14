@@ -338,7 +338,10 @@ export default function EditNovel() {
                 </div>
 
                 <div className="flex-1 bg-white max-w-[485.825px] p-6 shadow-[0_2px_8px_rgba(47,43,61,0.2),0_0_transparent,0_0_transparent] rounded-md overflow-y-auto">
-                    <CropperImage onCropComplete={handleCropComplete} />
+                    <CropperImage
+                        onCropComplete={handleCropComplete}
+                        size={{ width: 300, height: 400 }} 
+                    />
                     {croppedImage && (
                         <div className="mt-5">
                             <div className="my-1">Ảnh đã cắt</div>

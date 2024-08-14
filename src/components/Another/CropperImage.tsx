@@ -4,21 +4,23 @@ import Cropper from "cropperjs";
 
 interface CropperImageProps {
     onCropComplete: (croppedImageUrl: string | null) => void; // Callback để gửi ảnh đã cắt
+    size?: { width: number; height: number }; // Tham số kích thước
 }
 
-export default function CropperImage({ onCropComplete }: CropperImageProps) {
+export default function CropperImage({ onCropComplete, size = { width: 300, height: 400 } }: CropperImageProps) {
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const imageRef = useRef<HTMLImageElement | null>(null);
     const [cropper, setCropper] = useState<Cropper | null>(null);
-    const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
 
     useEffect(() => {
         if (imageRef.current && preview) {
             const newCropper = new Cropper(imageRef.current, {
-                aspectRatio: 3 / 4,
+                aspectRatio: size.width / size.height, // Cập nhật aspectRatio theo kích thước mới
                 viewMode: 1,
                 autoCropArea: 1,
+                zoomable: false, // Ngăn chặn việc zoom để giữ kích thước chính xác
+                scalable: false, // Ngăn chặn việc thay đổi kích thước để giữ kích thước chính xác
             });
             setCropper(newCropper);
 
@@ -26,7 +28,7 @@ export default function CropperImage({ onCropComplete }: CropperImageProps) {
                 newCropper.destroy();
             };
         }
-    }, [preview]);
+    }, [preview, size]);
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -39,20 +41,17 @@ export default function CropperImage({ onCropComplete }: CropperImageProps) {
     const handleCrop = () => {
         if (cropper) {
             const croppedCanvas = cropper.getCroppedCanvas({
-                width: 300,
-                height: 400
+                width: size.width, // Sử dụng kích thước từ props
+                height: size.height,
             });
             const croppedImage = croppedCanvas.toDataURL('image/jpeg', 1.0);
-            setCroppedImageUrl(croppedImage);
             onCropComplete(croppedImage); // Gọi callback để truyền ảnh đã cắt
         }
     };
 
     return (
         <div className="flex">
-            <div className="flex-1 bg-white h-max w-max
-">
-
+            <div className="flex-1 bg-white h-max w-max">
                 <div className="mb-5">
                     <div className="my-1 mx-1">Chọn ảnh</div>
                     <div className="flex mx-1">
@@ -70,10 +69,9 @@ export default function CropperImage({ onCropComplete }: CropperImageProps) {
                 {preview && (
                     <div className="mt-5 mx-1">
                         <div className="flex my-1">
-                            <div className="">Ảnh đã chọn</div>
-                            {/* <div className="text-red ml-3">Phải chọn Cắt ảnh cho ra kết quả mới được chọn tiếp theo</div> */}
+                            <div>Ảnh đã chọn</div>
                         </div>
-                        <div className="relative border border-gray rounded-md  w-full max-w-[99%] h-72 overflow-hidden">
+                        <div className="relative border border-gray rounded-md w-full max-w-[99%] h-72 overflow-hidden">
                             <img
                                 ref={imageRef} 
                                 src={preview}
@@ -89,19 +87,6 @@ export default function CropperImage({ onCropComplete }: CropperImageProps) {
                         </div>
                     </div>
                 )}
-
-                {/* {croppedImageUrl && (
-                    <div className="mt-5 mx-1">
-                        <div className="my-1">Ảnh đã cắt</div>
-                        <div className="bg-gray_light border border-gray rounded-md p-2 w-full max-w-[99%] h-72 overflow-hidden">
-                            <img
-                                src={croppedImageUrl}
-                                alt="Cropped"
-                                className="w-full h-full object-contain"
-                            />
-                        </div>
-                    </div>
-                )} */}
             </div>
         </div>
     );
