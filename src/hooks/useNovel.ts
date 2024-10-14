@@ -36,8 +36,6 @@ export interface ITagI {
     name: string;
 }
 
-
-
 export interface INovelDetailsI {
     id: number;
     title: string;
