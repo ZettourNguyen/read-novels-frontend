@@ -1,5 +1,6 @@
 import { useGetHistoryUser } from '@/hooks/useHistory';
 import { timeAgo } from '@/store/Time';
+import { IHistoriesDetail } from '@/types/history.interface';
 
 export default function HistoryCard() {
   const { histories, loading, error, rmHistory, fetchHistories} = useGetHistoryUser();
@@ -26,13 +27,12 @@ export default function HistoryCard() {
   function handleRemoveHistory(id : number): void {
     rmHistory(id)
     fetchHistories()
-    console.log(id)
   }
 
   return (
     <div className='bg-white border-[1px] border-gray_hover'>
       <div className='max-h-[200px] overflow-y-auto'> {/* Giới hạn chiều cao và bật cuộn dọc */}
-        {histories?.map((item: any, index: number) => (
+        {histories?.map((item: IHistoriesDetail, index: number) => (
           <div key={index} className="grid grid-cols-12 gap-2 mb-2 px-3 py-1 bg-gray_hover">
             <div className="hidden md:block xl:col-span-2 md:truncate">
               <span className="text-gray text-xs truncate">
@@ -40,13 +40,13 @@ export default function HistoryCard() {
               </span>
             </div>
             <div className="col-span-12 xl:col-span-5 sm:col-span-8 md:col-span-7 sm:truncate content-center ">
-              <a href={`/novel/${item.novelId}`} className="text-sm font-semibold hover:text-theme_color truncate">
-                {item.novelTitle}
+              <a href={`/novel/${item.novel.id}`} className="text-sm font-semibold hover:text-theme_color truncate">
+                {item.novel.title}
               </a>
             </div>
             <div className="md:pl-3 col-span-11 xl:col-span-4 lg:col-span-2 sm:col-span-3 md:col-span-2 md:truncate">
-              <a href={`/novel/${item.novelId}/${item.chapterId}`} className="sm:text-xs truncate">
-                {item.chapterTitle}
+              <a href={`/novel/${item.novel.id}/${item.chapterId}`} className="sm:text-xs truncate">
+                {item.chapter.title}
               </a>
             </div>
             <div className="col-span-1 justify-self-end">

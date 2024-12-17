@@ -15,15 +15,8 @@ import { MdError } from "react-icons/md";
 import useNotification from "@/hooks/useNotification";
 import { useNovel } from "@/hooks/useNovel";
 import { ToastContainer } from "react-toastify";
+import { EnumPermission } from "@/Enums/Permission";
 
-export interface INotificationI {
-  id: number;
-  title: string;
-  type: string; // Có thể là 'success', 'error', 'info', v.v.
-  content: string;
-  createdAt: Date | null;
-  userId: number;
-}
 
 function IsLoginHeader() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -49,13 +42,12 @@ function IsLoginHeader() {
       inputSearchRef.current.focus();
     }
   };
-
   const isAdminPermission = permissions.some(permission =>
-    permission.name.includes("Manager")
+    permission.name.includes("Manager") // có manager trong permission là true
   );
-  const hasNoPosterPermission = permissions.some(permission =>
-    permission.name.includes("NoPost")
+  const hasNoPosterPermission = permissions.some(permission => permission.name === EnumPermission.NoPost
   )
+
   // nav
   const [menuNavigate2, setMenuNavigate2] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Sử dụng useRef để tham chiếu đến phần tử menu
@@ -75,13 +67,13 @@ function IsLoginHeader() {
     if (query) {
       navigate(`/list/search/${encodeURIComponent(query)}`);
     }
-};
+  };
 
-const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-        handleSearch();
+      handleSearch();
     }
-};
+  };
 
   const handleLogout = async () => {
     try {
@@ -159,11 +151,12 @@ const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
     setNotificationElements(elements);
   };
-
-
+  
   useEffect(() => {
-    fetchNotificationElements();
-  }, [notifications]);
+    fetchNotificationElements(); // Gọi API chỉ khi component mount
+  }, []); // Dependency array rỗng, chỉ chạy một lần
+  
+
 
   return (
     <div className="py-[8px]">

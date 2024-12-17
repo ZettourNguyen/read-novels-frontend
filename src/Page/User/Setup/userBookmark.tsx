@@ -1,5 +1,4 @@
 import useGetBookmark from "@/hooks/useBookmark";
-import userIcon from '@/assets/imgs/user-128.svg';
 import { Link } from "react-router-dom";
 import { convertTo24Hour } from "@/store/Time";
 import { useState } from "react";
@@ -14,7 +13,7 @@ export default function BookmarkPage() {
   };
   const filtered = bookmark
     .filter(bookmark => {
-      return bookmark.title.toLowerCase().includes(searchTerm.toLowerCase());
+      return bookmark.novel.title.toLowerCase().includes(searchTerm.toLowerCase());
     });
   if (loading) {
     return (
@@ -53,20 +52,20 @@ export default function BookmarkPage() {
             <div className='w-[12%]'>
               <a href={`/novel/${item.id}`}>
                 <img
-                  src={item.image}
-                  alt={item.title}
+                  src={item.novel.image}
+                  alt={item.novel.title}
                   className='w-full h-full first-letter:object-cover rounded border border-[#e1e1e1] cursor-pointer'
                 />
               </a>
             </div>
             <div className='flex flex-col flex-1'>
               <a href={`/novel/${item.id}`} className=''>
-                <p className="font-semibold  text-lg hover:text-theme_color cursor-pointer">{item.title}</p>
+                <p className="font-semibold  text-lg hover:text-theme_color cursor-pointer">{item.novel.title}</p>
               </a>
               <div className='flex items-center mt-1'>
 
                 <div className='flex flex-wrap gap-3'>
-                  {item.author.map((author) => (
+                  {item.novel.authors.map((author) => (
                     <div key={author.id} className='flex justify-between hover:underline items-center'>
                       <Link to={`/author/${author.id}`} className='flex items-center'>
                         <p className="hover:text-theme_color">{author.nickname}</p>
@@ -76,9 +75,9 @@ export default function BookmarkPage() {
                 </div>
 
               </div>
-              <div className="text-sm my-1">Cập nhật vào lúc {convertTo24Hour(item.updatedAt)}</div>
+              <div className="text-sm my-1">Cập nhật vào lúc {convertTo24Hour(item.createdAt)}</div>
               <div>
-                <button onClick={() => handleRmBookmark(item.bookmarkId)}
+                <button onClick={() => handleRmBookmark(item.id)}
                   className="p-1 px-2 text-red border-[1px] bottom-0">Bỏ đánh dấu</button>
               </div>
             </div>

@@ -23,11 +23,14 @@ export default function ManagerRolePermission() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
+
     if (!roleId) {
-        return
+        return <div>Vai trò không hợp lệ. Vui lòng kiểm tra lại!</div>;
     }
-    const { roleName } = getRoleName(roleId)
-    const { permissions, refetch } = useRolePermission(roleId); // Danh sách quyền của vai trò
+
+    const { roleName } = getRoleName(+roleId) || { roleName: 'Không xác định' };
+    const { permissions, refetch } = useRolePermission(+roleId) || { permissions: [], refetch: () => { } };
+
     const { permissionsList, loading, error } = useListPermission(); // Danh sách quyền
 
     // Set để kiểm tra nhanh các permission ID có trong permissions
@@ -46,7 +49,7 @@ export default function ManagerRolePermission() {
     async function handleAddRoleToPermission(permissionId: number) {
         try {
             if (user) {
-                const response = await axiosInstance.get(`/role/addPermissionToRole/${user.id}`, {
+                const response = await axiosInstance.post(`/role/addPermissionToRole/${user.id}`, {
                     params: { roleId, permissionId }
                 });
                 setRefresh(prev => !prev);
@@ -96,11 +99,11 @@ export default function ManagerRolePermission() {
                                     onChange={handleSearchChange}
                                 />
                             </div>
-                            { roleName==="SuperAdmin" &&
+                            {roleName === "SuperAdmin" &&
                                 <div className="flex mx-1 text-[#FF6A30] p-1 rounded-md gap-1 items-end">
-                                <FiInfo size={25} />
-                                <span>SuperAdmin là vai trò cao nhất, cho nên không có bất cứ hành động nào.</span>
-                            </div>
+                                    <FiInfo size={25} />
+                                    <span>SuperAdmin là vai trò cao nhất, cho nên không có bất cứ hành động nào.</span>
+                                </div>
                             }
                         </div>
                     </div>
@@ -125,7 +128,7 @@ export default function ManagerRolePermission() {
                                                 <div className="flex justify-center items-center space-x-1">
                                                     {!permissionIds.has(permission.id) ? (
                                                         // Nếu permission có trong danh sách permissions, chỉ hiển thị nút Xóa quyền
-                                                        <ButtonWithTooltip 
+                                                        <ButtonWithTooltip
                                                             className="text-red font-bold py-1 px-2 rounded"
                                                             title="Không sở hữu"
                                                         >
@@ -148,7 +151,7 @@ export default function ManagerRolePermission() {
                                                 <div className="flex justify-center items-center space-x-1">
                                                     {permissionIds.has(permission.id) ? (
                                                         // Nếu permission có trong danh sách permissions, chỉ hiển thị nút Xóa quyền
-                                                        <ButtonWithTooltip 
+                                                        <ButtonWithTooltip
                                                             className="text-red font-bold py-1 px-2 rounded"
                                                             title="Xóa quyền"
                                                             onClick={() => handleRemoveRoleToPermission(permission.id)}

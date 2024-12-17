@@ -1,6 +1,6 @@
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import { CgClose } from "react-icons/cg";
-import { useUserList } from "@/hooks/useUser";
+import { useUsers } from "@/hooks/useUser";
 import { useState } from "react";
 import { BiSearchAlt, BiSolidBookAdd, BiSolidPencil } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -13,6 +13,7 @@ import actionNotification from "@/components/NotificationState/Toast";
 import history from "@/router/history";
 import { ToastContainer } from "react-toastify";
 import { useUserPermission } from "@/hooks/usePermission";
+import { EnumPermission } from "@/Enums/Permission";
 export default function ManagerUser() {
     const user = useSelector((state: RootState) => state.auth.user);
 
@@ -20,10 +21,11 @@ export default function ManagerUser() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const { users, loading, error, refreshUserList } = useUserList()
+    const { users, loading, error, refreshUsers } = useUsers()
     const { permissions }= useUserPermission()
     const isUserRolePermission = permissions.some(permission => 
-        permission.name.includes("UserRole")
+        permission.name === EnumPermission.ManagerRole || 
+        permission.name === EnumPermission.ManagerUserRole
       );
     const filtered = users
         .filter(user => {
@@ -37,7 +39,7 @@ export default function ManagerUser() {
                     userId: user.id,
                     userBlockId: userBlockId
                 });
-                refreshUserList()
+                refreshUsers()
                 actionNotification(`Chuyển trạng thái block người dùng thành công`, 'success');
 
             } catch (error: any) {

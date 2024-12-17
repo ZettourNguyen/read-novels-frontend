@@ -2,7 +2,7 @@ import axiosInstance from "@/api";
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
 import CustomModal from "@/components/Popup/ConfirmPopupModal";
-import { useCategoryList } from "@/hooks/userCategoryList";
+import { useCategories } from "@/hooks/useCategories";
 import { RootState } from "@/store/store";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,7 @@ export default function ManagerCategory() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const { categories, loading, error, refetch } = useCategoryList()
+    const { categories, loading, error, refetch } = useCategories()
 
     const filtered = categories
         .filter(category => {

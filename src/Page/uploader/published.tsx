@@ -49,7 +49,13 @@ export default function Published() {
     }
     const handleChangeState = async (novelId: number, state: string) => {
         try {
-            const response = await axiosInstance.put(`/novel/state/${novelId}`, { state });
+            // const response = await axiosInstance.put(`/novel/state/${novelId}`, { state });
+            const data = {
+                id: novelId,
+                state: state
+            };
+            
+            const response = await axiosInstance.patch(`/novel/update/${user?.id}`, data)
             actionNotification("Đã xử lý thành công", "success")
             closeModal()
             refetch();

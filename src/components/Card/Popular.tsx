@@ -1,11 +1,11 @@
 import userIcon from '@/assets/imgs/user-128.svg'
-import { NovelCardFull } from '@/Page/ListNovels'
+import { INovelSummary } from '@/types/novel.interface'
 import { FaRegEye } from 'react-icons/fa'
 
 
 
 
-function PopularCard({ item }: { item: NovelCardFull }) {
+function PopularCard({ item }: { item: INovelSummary }) {
     return (
         <div className='mw-[100%] flex gap-x-[20px] lg:flex-row sm:flex-row lg:w-[47%] sm:w-[100%]'>
             <a className='img-preview sm:w-[27%] cursor-pointer w-[20%]'
@@ -24,12 +24,12 @@ function PopularCard({ item }: { item: NovelCardFull }) {
 
                 <a href={`/list/category/${item.categoryId}`} className='flex mt-1'>
                     <p className="border border-theme_color-300 
-                    rounded-md cursor-pointer p-1 text-xs font-medium text-dark_gold">{item.categoryName}</p>
+                    rounded-md cursor-pointer p-1 text-xs font-medium text-dark_gold">{item.category.name}</p>
                 </a>
 
                 <div className='flex justify-between items-center'>
                 <div>
-    {item.author.map((author) => (
+    {item.authors.map((author) => (
         <a key={author.id} className='flex items-center' href={`/list/author/${author.id}`}>
             <div className='owner w-[20px] h-[20px]'>
                 <img src={userIcon} alt="User Icon" className='w-100 rounded-full h-100' />
@@ -43,7 +43,7 @@ function PopularCard({ item }: { item: NovelCardFull }) {
 
                     <div className='flex items-center gap-2'>
                         <FaRegEye className="text-[#909399]" />
-                        <span className='text-gray_text text-xs'>{item.views}</span>
+                        <span className='text-gray_text text-xs'>{item.totalViews}</span>
                     </div>
                 </div>
             </div>

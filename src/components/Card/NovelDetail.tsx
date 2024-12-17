@@ -35,7 +35,7 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
     if (loading) return <div>Loading...</div>;
     if (!novelDetails) return <div>Error: {error}</div>;
 
-    const imageCover = novelDetails?.image || defaultImage;
+    const imageCover = novelDetails?.novel.image || defaultImage;
 
     const stateMap: { [key: string]: string } = {
         ongoing: 'Còn tiếp',
@@ -81,7 +81,7 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
             actionNotification("Bạn phải đăng nhập để thực hiện hành động này", "warning")
         }else{
             const data = {
-                title: `Báo cáo truyện: ${novelDetails.title}`,
+                title: `Báo cáo truyện: ${novelDetails?.novel.title}`,
                 novelId,
                 userId: user.id,
                 content: reportText
@@ -100,19 +100,19 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
                 </div>
 
                 <div className='flex-col mt-1 gap-6 ml-4'>
-                    <div className='font-semibold text-lg'>{novelDetails?.title}</div>
+                    <div className='font-semibold text-lg'>{novelDetails?.novel.title}</div>
                     <div className='flex'>
-                        {novelDetails.author.map((author, index) => (
+                        {novelDetails.novel.authors.map((author, index) => (
                             <React.Fragment key={author.id}>
                                 <Link to={`/author/${author.id}`}>
                                     <div className='text-gray hover:text-red'>{author.nickname}</div>
                                 </Link>
-                                {index < novelDetails.author.length - 1 && <span className='text-gray mr-3'>, </span>}
+                                {index < novelDetails.novel.authors.length - 1 && <span className='text-gray mr-3'>, </span>}
                             </React.Fragment>
                         ))}
                     </div>
                     <div className='flex mt-3 gap-6'>
-                        <Link to={`${novelDetails?.chapter0}`}>
+                        <Link to={`${novelDetails?.novelDetail.chapter0}`}>
                             <div className='flex border rounded-md border-gold bg-gold text-white py-1 px-2'>
                                 <FaBookOpen className='self-center mr-2' />
                                 Đọc truyện
@@ -147,32 +147,32 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
                     </div>
                     <div className='flex mt-3'>
                         <div className='border-gray border-r-[1px] pr-4'>
-                            <div className='text-center font-bold'>{novelDetails?.countChaptersPublishedInLast7Days}</div>
+                            <div className='text-center font-bold'>{novelDetails?.novelDetail.countChaptersPublishedInLast7Days}</div>
                             <div>Chương/tuần</div>
                         </div>
                         <div className='border-gray border-r-[1px] px-4'>
-                            <div className='text-center font-bold'>{novelDetails?.views}</div>
+                            <div className='text-center font-bold'>{novelDetails?.novel.totalViews}</div>
                             <div>Lượt đọc</div>
                         </div>
                         <div className='border-gray border-r-[1px] px-4'>
-                            <div className='text-center font-bold'>{novelDetails?.numberSavedBookmark}</div>
+                            <div className='text-center font-bold'>{novelDetails?.novelDetail.numberSavedBookmark}</div>
                             <div>Cất giữ</div>
                         </div>
                         <div className='px-4'>
-                            <div className='text-center font-bold'>{novelDetails?.numberOfNominations}</div>
+                            <div className='text-center font-bold'>{novelDetails?.novelDetail.numberOfNominations}</div>
                             <div>Đánh giá</div>
                         </div>
                     </div>
                     <div className='flex'>
                         <div className='mt-6 border rounded-md border-gold text-gold text-sm p-1 mr-4'>
-                            {stateMap[novelDetails.state]}
+                            {stateMap[novelDetails.novel.state]}
                         </div>
-                        <a href={`/list/category/${novelDetails?.categoryId}`}>
+                        <a href={`/list/category/${novelDetails?.novel.categoryId}`}>
                             <div className='mt-6 border rounded-md border-red text-red text-sm p-1 mr-4'>
-                                {novelDetails?.categoryName}
+                                {novelDetails?.novel.category.name}
                             </div>
                         </a>
-                        {novelDetails?.tags.map(tag => (
+                        {novelDetails?.novel.tags.map(tag => (
                             <a href={`/list/tag/${tag.id}`} key={tag.id}>
                                 <div key={tag.id} className='mt-6 border rounded-md border-[#047857] text-[#047857] text-sm p-1 mr-4'>
                                     {tag.name}
@@ -186,15 +186,15 @@ export default function NoverDetailsCard({ novelId }: NoverDetailsCardProps) {
                 GIỚI THIỆU
             </div>
             <div className='border-x-[2px] border-x-gray_light p-3'>
-                <EscapedNewLineToLineBreakTag string={novelDetails?.description || ''} />
+                <EscapedNewLineToLineBreakTag string={novelDetails?.novel.description || ''} />
             </div>
-            <a href={`/list/poster/${novelDetails.posterId}`}>
+            <a href={`/list/poster/${novelDetails.novel.posterId}`}>
                 <div className='bg-[#E4DECE] text-sm uppercase px-4 py-1'>
                     Người đăng
                 </div>
                 <div className='flex border-x-[2px] border-x-gray_light p-3'>
-                    <img className='h-[60px] w-[60px]rounded-full shadow-custom-blue' src={novelDetails.posterAvatar} alt="" />
-                    <div className='ml-3 self-center'>{novelDetails.posterName}</div>
+                    <img className='h-[60px] w-[60px]rounded-full shadow-custom-blue' src={novelDetails.novel.poster.avatar} alt="" />
+                    <div className='ml-3 self-center'>{novelDetails.novel.poster.username}</div>
                 </div>
             </a>
         </div>

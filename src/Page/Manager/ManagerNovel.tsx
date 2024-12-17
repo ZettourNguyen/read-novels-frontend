@@ -3,7 +3,7 @@ import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
 import CustomModal from "@/components/Popup/ConfirmPopupModal";
 import { useAllNovel } from "@/hooks/useNovel";
-import { useRoleList } from "@/hooks/useRole";
+import { useRoles } from "@/hooks/useRole";
 import { RootState } from "@/store/store";
 import { timeAgo } from "@/store/Time";
 import { useState } from "react";
@@ -67,7 +67,13 @@ export default function ManagerNovel() {
             if (user && typeDelete==="XoaTamThoi") {
                 const state = 'deleted'
                 closeModal();
-                const response = await axiosInstance.put(`/novel/state/${novelId}`, { state });
+                const data = {
+                    id: novelId,
+                    state: 'deleted'
+                };
+                
+                const response = await axiosInstance.patch(`/novel/update/${user?.id}`, data)
+                // const response = await axiosInstance.put(`/novel/state/${novelId}`, { state });
                 console.log('Xóa truyện thành công', response.status);
                 refetch()
 
@@ -153,9 +159,9 @@ export default function ManagerNovel() {
                                     <tr className="hover:bg-gray_hover border-b border-gray" key={novel.id}>
                                         <td className=" px-3 py-2 text-center">{novel.id}</td>
                                         <td className=" px-3 py-2 text-center truncate max-w-[220px] ">{novel.title}</td>
-                                        <td className=" px-3 py-2 text-center">{novel.posterName}</td>
+                                        <td className=" px-3 py-2 text-center">{novel.posterId}</td>
                                         <td className="px-3 py-2 text-center">{stateMap[novel.state] || 'Không xác định'}</td>
-                                        <td className=" px-3 py-2 text-center">{novel.chapters}</td>
+                                        <td className=" px-3 py-2 text-center">{novel}</td>
                                         <td className=" px-3 py-2 text-center">{timeAgo(novel.createdAt)}</td>
                                         <td className="px-3 py-2 text-center border-collapse">
                                             <div className="flex justify-center items-center space-x-2">

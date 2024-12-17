@@ -1,10 +1,10 @@
 import userIcon from '@/assets/imgs/user-128.svg'
-import { ICardNovelsI } from '@/hooks/useNovel'
+import { INovelSummary } from '@/types/novel.interface'
 import { Link } from 'react-router-dom'
 
 
 
-function NovelCard({ item }: { item: ICardNovelsI }) {
+function NovelCard({ item }: { item: INovelSummary }) {
     return (
         <div className='mw-[100%] flex gap-x-[20px] lg:flex-row sm:flex-row lg:w-[47%] sm:w-[100%]'>
             <Link to={`novel/${item.id}`} className='img-preview sm:w-[27%] cursor-pointer w-[20%]'>
@@ -22,7 +22,7 @@ function NovelCard({ item }: { item: ICardNovelsI }) {
 
                 <Link to={`list/category/${item.categoryId}`} className='flex mt-1'>
                     <p className="border border-theme_color-300 rounded-md cursor-pointer 
-                    p-1 text-xs font-medium text-dark_gold">{item.categoryName}</p>
+                    p-1 text-xs font-medium text-dark_gold">{item.category.name}</p>
                 </Link>
                 <div className='flex'>
                 <div className='owner w-[20px] h-[20px]'>
@@ -30,7 +30,7 @@ function NovelCard({ item }: { item: ICardNovelsI }) {
                     </div>
                 <div className='flex-wrap'>
                     
-                    {item.author.map((author) => (
+                    {item.authors.map((author) => (
                         <div key={author.id} className='flex justify-between hover:underline items-center'>
                             <Link to={`list/author/${author.id}`} className='flex items-center'>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/api';
+import { categoryApiReuqest } from '@/api/category';
 
 export interface CategoryProps {
     id: number
@@ -7,13 +8,13 @@ export interface CategoryProps {
     description: string
 }
 
-export const useCategoryList = () => {
+export const useCategories = () => {
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const fetchCategories = async () => {
         try {
-            const response = await axiosInstance.get('/category');
+            const response = await categoryApiReuqest.getCategories()
             setCategories(response.data);
         } catch (error: any) {
             setError(error.message);
@@ -29,16 +30,16 @@ export const useCategoryList = () => {
     return { categories, loading, error, refetch: fetchCategories };
 };
 
-export const useCategoryListInNovel = (categoryId: number) => {
-    const [categoriesInNovel, setCategoriesInNovel] = useState<CategoryProps>();
+export const useNovelCategories = (categoryId: number) => {
+    const [NovelCategories, setNovelCategories] = useState<CategoryProps>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axiosInstance.get(`/category/novel/${categoryId}`);
-                setCategoriesInNovel(response.data);
+                const response = await categoryApiReuqest.getNovelCategories(categoryId)
+                setNovelCategories(response.data);
             } catch (error: any) {
                 setError(error.message);
             } finally {
@@ -50,6 +51,6 @@ export const useCategoryListInNovel = (categoryId: number) => {
         }
     }, []);
 
-    return { categoriesInNovel, loading, error };
+    return { NovelCategories, loading, error };
 };
 

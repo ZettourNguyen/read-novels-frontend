@@ -7,7 +7,7 @@ interface User {
     avatar: string,
     birthday: string,
     gender: number,
-    blacklist:string,
+    blacklist:number,
     confirmer: boolean,
     createAt: string,
     rolesId: number[]

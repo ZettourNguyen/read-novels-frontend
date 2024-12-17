@@ -1,8 +1,10 @@
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 
-export const convertTo24Hour = (dateString: string) => {
-    const date = new Date(dateString);
+export const convertTo24Hour = (data: any) => {
+    // const date = new Date(dateString);
+    const date = (data instanceof Date) ? data : new Date(data);
+
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
@@ -12,8 +14,14 @@ export const convertTo24Hour = (dateString: string) => {
     return `${date.toLocaleDateString()}, ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-export const timeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-
-    return formatDistanceToNow(date, { addSuffix: true, locale: vi }); // Thêm locale vào hàm
-};
+export const timeAgo = (date: Date | string | null | undefined): string => {
+    if (!date) {
+        console.log(typeof(date))
+      return 'Invalid date'; // Hoặc thông báo mặc định
+    }
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return 'Invalid date'; // Hoặc thông báo mặc định
+    }
+    return formatDistanceToNow(parsedDate, { addSuffix: true , locale: vi});
+  };

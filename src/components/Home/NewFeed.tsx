@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import NovelFeedCard, { NovelFeedCardProps } from '../Card/FeedCard'
-import { useCategoryList } from '@/hooks/userCategoryList';
+import NovelFeedCard from '../Card/FeedCard'
+import { useCategories } from '@/hooks/useCategories';
 import { Link } from 'react-router-dom';
 import { useLastNovels } from '@/hooks/useNovel';
+import { INovelSummary } from '@/types/novel.interface';
 const borderTab = 'border-b-[3px] border-b-solid border-b-sky_blue_light '
 
 function NewFeed() {
     const [tab, setTab] = useState(0)
 
-    const { categories } = useCategoryList();
+    const { categories } = useCategories();
 
     const { novelsLast, loadingInfor, errorInfor } = useLastNovels()
     
@@ -44,8 +45,8 @@ function NewFeed() {
                 </div>
                 <div className='pb-10'>
                     {
-                        novelsLast.map((item: NovelFeedCardProps, id) => (
-                            <NovelFeedCard item={item} key={id.toString()} />
+                        novelsLast.map((item: INovelSummary) => (
+                            <NovelFeedCard item={item} key={item.id} />
                         ))
                     }
                     {/* <Pagination
@@ -70,7 +71,7 @@ function NewFeed() {
                 <div className="flex flex-wrap gap-x-2 gap-y-2 mt-5">
                     {/* // change it */}
                     {categories.map((category, id) => (
-                        <Link to={`/list/category/${category.id}`}>
+                        <Link to={`/list/category/${category.id}`} key={id.toString()}>
                             <p  
                             className='
                             text-[15px] py-2 px-4 border-[1px] 
@@ -78,7 +79,6 @@ function NewFeed() {
                             rounded-full
                             cursor-pointer
                             border-solid '
-                            key={id.toString()}
                         >
                             {category.name}
                         </p>

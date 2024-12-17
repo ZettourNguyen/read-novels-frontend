@@ -1,58 +1,46 @@
-import axiosInstance from "@/api";
+import { authApiRequest } from "@/api/auth";
+import { tagApiRequest } from "@/api/tag";
 import Banner from "@/components/Banner";
 import PopularCard from "@/components/Card/Popular";
-import { IAuthorI } from "@/hooks/useAuthor";
-import { ITagI, useListNovels } from "@/hooks/useNovel";
+import MyPagination from "@/components/Pagination";
+import { useListNovels } from "@/hooks/useNovel";
+import { INovelSummary } from "@/types/novel.interface";
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-export interface NovelCardFull {
-    id: number
-    title: string
-    image: string,
-    description: string
-    categoryId: number
-    categoryName: string
-    posterId: number
-    posterName: string
-    tags: ITagI[]
-    author: IAuthorI[]
-    createdAt: string
-    views: string
-}
-
-export interface LoaddingListProps { //list/category:categoryId
-    type: string // category
-    id: string // categoryname
-}
-
-
 
 export default function ListNovels() {
     const { type, id } = useParams<{ type: string; id: string }>();
     const [typeName, setTypeName] = useState<string>('');
+    const [page, setCurrentPage] = useState(1);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
     if (!type || !id) {
         return <div>Invalid parameters</div>;
     }
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+        return <div>Invalid ID format</div>; // Kiểm tra nếu id không hợp lệ
+    }
 
-    const { novelsList, loadingList, errorList } = useListNovels({ type, id });
+    const limit = 20
+    const { novelsList, loadingList, errorList } = useListNovels({ type, id: numericId, page, limit});
+
 
     useEffect(() => {
         const fetchTypeName = async () => {
-            if (type !== 'poster') {
-                try {
-                    const response = await axiosInstance.get(`/${type}/name/${id}`);
-                    setTypeName(response.data); // Lưu giá trị vào state
-                } catch (error) {
-                    console.error("Error fetching type name:", error);
+            try {
+                if (type !== 'poster') {
+                    const response = await tagApiRequest.getTagName(type, +id)
+                    setTypeName(response.data);
+                } else {
+                    const response = await authApiRequest.getUserNameById(+id)
+                    setTypeName(` được đăng bởi ${response.data}`);
                 }
-            } else {
-                try {
-                    const response = await axiosInstance.get(`/auth/name/${id}`);
-                    setTypeName(`được đăng bởi ${response.data}`); // Lưu giá trị vào state
-                } catch (error) {
-                    console.error("Error fetching type name:", error);
-                }
+            } catch (error) {
+                console.error("Error fetching type name:", error);
             }
         };
 
@@ -89,30 +77,32 @@ export default function ListNovels() {
         </div>
     </div>;
 
-
-
-
     return (
         <div>
             <Banner></Banner>
             <div className="md:container">
+                <div className="flex justify-between">
                 <p className="text-base text-theme_color font-semibold py-4 mx-2 uppercase">TRUYỆN {typeName}</p>
-
+                <p className="text-base text-red py-4 mx-2"> Tổng: {novelsList?.totalRecords} truyện</p>
+                
+                </div>
                 <div className="flex gap-10 flex-wrap mx-2 mb-4">
-                    {novelsList.map((item: NovelCardFull, index: number) => (
-                        <PopularCard item={item} key={index.toString()} />
-                    ))}
-                    {novelsList.length < 1 && (
+                    {novelsList?.novels && novelsList.novels.length > 0 ? (
+                        novelsList.novels.map((item: INovelSummary) => (
+                            <PopularCard item={item} key={item.id} />
+                        ))
+                    ) : (
                         <div className="text-center text-gray my-5">
                             Không có truyện nào thuộc thể loại này để hiển thị.
                         </div>
                     )}
-
                 </div>
-
+                <MyPagination
+                    currentPage={page}
+                    totalPages={novelsList?.totalPages || 1}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </div>
     )
 }
-
-/// sai het, 1: troongs, them tham so: category? tag? novel? author? poster? => be =>

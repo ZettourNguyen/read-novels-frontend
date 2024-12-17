@@ -10,6 +10,7 @@ import { FaRegFlag } from "react-icons/fa";
 import ReportForm from "../Another/ReportForm";
 import { useGetReport } from "@/hooks/useReport";
 import { useUserPermission } from "@/hooks/usePermission";
+import { EnumPermission } from "@/Enums/Permission";
 
 export interface Replies {
     id: number;
@@ -18,7 +19,7 @@ export interface Replies {
     userId: number;
     username: string;
     userAvatar: string;
-    replyCreatedAt: string;
+    replyCreatedAt: Date;
 }
 
 export interface Comment {
@@ -44,7 +45,7 @@ export default function NovelComments({ novelId }: { novelId: number }) {
     const [commentId, setCommentId] = useState<number>();
     const { permissions } = useUserPermission();
     const hasNoCommentPermission = permissions.some(permission =>
-        permission.name.includes("NoComment")
+        permission.name === EnumPermission.NoComment
     );
 
     // Fetch comments on component mount
@@ -167,13 +168,13 @@ export default function NovelComments({ novelId }: { novelId: number }) {
                                 <div className="flex gap-3">
                                     <img
                                         src={comment.userAvatar || 'https://via.placeholder.com/30'}
-                                        className="h-8 w-8 rounded-full shadow-custom-blue"
+                                        className="h-10 w-10 rounded-full "
                                         alt={comment.username + "'s avatar"}
                                     />
                                     <p className="self-center"><strong>{comment.username}</strong></p>
                                     <p className="text-xs self-center">{timeAgo(comment.createdAt)}</p>
                                 </div>
-                                <div className="">...</div>
+                                {/* <div className="">...</div> */}
                             </div>
                             <p className="my-4">{comment.content}</p>
                             <div className="text-gray flex gap-1">
@@ -186,15 +187,16 @@ export default function NovelComments({ novelId }: { novelId: number }) {
                             {showReplyInput === comment.id && (
                                 <div className="pl-14 mt-5">
                                     {comment.replies.map(reply => (
-                                        <div key={reply.id} className="p-4 border-[0.5px] border-gray_light mb-2 rounded-lg bg-gray_light">
+                                        <div key={reply.id} className="p-4 border-[0.5px] border-gray_light mb-2 rounded-lg bg-gray_hover">
                                             <div className="flex gap-3">
                                                 <img
                                                     src={reply.userAvatar || 'https://via.placeholder.com/30'}
-                                                    className="h-8 w-8 rounded-full shadow-custom-blue"
+                                                    className="h-10 w-10 rounded-full "
                                                     alt={reply.username + "'s avatar"}
                                                 />
                                                 <p className="self-center"><strong>{reply.username}</strong></p>
-                                                <p className="text-xs self-center">{timeAgo(reply.replyCreatedAt)}</p>
+                                                <p className="text-xs self-center">{timeAgo(reply.createdAt)}</p>
+
                                             </div>
                                             <p className="my-2">{reply.content}</p>
                                             <div className="text-gray flex gap-1">

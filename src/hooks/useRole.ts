@@ -1,28 +1,21 @@
-import axiosInstance from "@/api";
 import { RootState } from "@/store/store";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { IPermissionI } from "./usePermission";
 import actionNotification from "@/components/NotificationState/Toast";
+import { IRoleDetails } from "@/types/role.interface";
+import { roleApiRequest } from "@/api/role";
 
-export interface IRoleI {
-    id: number;
-    name: string;
-    description: string;
-    permissions: IPermissionI[]
-}
-
-export const useRoleList = () => {
+export const useRoles = () => {
     const user = useSelector((state: RootState) => state.auth.user);
 
-    const [roles, setRoles] = useState<IRoleI[]>([]);
+    const [roles, setRoles] = useState<IRoleDetails[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
         const fetchRoles = async () => {
             if (user?.id) {
                 try {
-                    const response = await axiosInstance.get(`/role/all/${user.id}`);
+                    const response = await roleApiRequest.getRoles(user.id)
                     setRoles(response.data);
                 } catch (error: any) {
                     setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');
@@ -42,14 +35,14 @@ export const useRoleList = () => {
     return { roles, loading, error, refetch: fetchRoles };
 };
 
-export function getRoleName(roleId: string) {
+export function getRoleName(roleId: number) {
     const [roleName, setRoleName] = useState<string>();
 
     useEffect(() => {
         const fetchRoles = async () => {
             const fetchRoleName = async () => {
                 try {
-                    const response = await axiosInstance.get(`/role/name/${roleId}`);
+                    const response = await roleApiRequest.getRoleName(roleId)
                     setRoleName(response.data);
                 } catch (error: any) {
                     actionNotification(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu', 'error');
@@ -73,7 +66,7 @@ export const useUserRole = (userId:number) => {
     const fetchUserRoles = async () => {
         if (userId) {
             try {
-                const response = await axiosInstance.get(`/role/user/${userId}`);
+                const response = await roleApiRequest.getUserRole(userId)
                 setUserRoles(response.data);
             } catch (error: any) {
                 setError(error.message || 'Đã xảy ra lỗi khi lấy dữ liệu');

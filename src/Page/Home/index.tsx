@@ -1,14 +1,14 @@
-import React from 'react';
 import Banner from '@/components/Banner';
 import NewFeed from '@/components/Home/NewFeed';
 import HistoryCard from '@/components/Card/HistoryCard';
-import { ICardNovelsI, useMostFollowNovels, useRandomNovels } from '@/hooks/useNovel';
+import { useMostFollowNovels, useRandomNovels } from '@/hooks/useNovel';
 import NovelCard from '@/components/Card/NovelCard';
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import LoadingPlaceholder from '@/components/Loading/LoadingPlaceholder';
+
 import { TbReload } from 'react-icons/tb';
+import { INovelSummary } from '@/types/novel.interface';
 // Import component placeholder
 
 function HomePage() {
@@ -39,7 +39,7 @@ function HomePage() {
           <p className="text-base text-theme_color font-semibold py-4 mx-2">BTV ĐỀ CỬ</p>
           <div>
             <div className="flex gap-10 flex-wrap">
-              {FollowNovels.map((item: ICardNovelsI, index: number) => (
+              {FollowNovels.map((item: INovelSummary, index: number) => (
                 <NovelCard item={item} key={index.toString()} />
               ))}
             </div>
@@ -61,7 +61,7 @@ function HomePage() {
         <div>
           <div className='my-2'>
             <div className="flex gap-10 flex-wrap">
-              {randomNovels.map((item: ICardNovelsI, index: number) => (
+              {randomNovels.map((item: INovelSummary, index: number) => (
                 <NovelCard item={item} key={index.toString()} />
               ))}
             </div>

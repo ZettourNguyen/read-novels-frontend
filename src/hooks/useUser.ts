@@ -3,25 +3,19 @@ import { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
-import { IRoleI } from './useRole';
-
-interface avatarUpdate {
-    id: string
-    avatar: string
-}
+import { IUpdateUser, User } from '@/types/user.interface';
+import { userApiRequest } from '@/api/user';
 
 export const useUser = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const { loadUser } = useAuth()
 
-    const uploadAvatarAPI = async (data: avatarUpdate) => {
+    const uploadAvatarAPI = async (data: IUpdateUser) => {
         try {
-
             setLoading(true);
             setError(null);
-
-            const response = await axiosInstance.post('/auth/avatar', data);
+            const response = await userApiRequest.patchUser(data)
             console.log('update avatar successfully:', response.status);
             loadUser()
             setLoading(false);
@@ -35,29 +29,17 @@ export const useUser = () => {
     return { loading, error, uploadAvatarAPI };
 };
 
-interface IUserListI {
-    id: number;
-    username: string;
-    email: string;
-    birthday: Date;
-    gender: number;
-    blacklist: boolean;
-    confirmed: boolean;
-    createdAt: Date;
-}
-
-export const useUserList = () => {
+export const useUsers = () => {
     const user = useSelector((state: RootState) => state.auth.user);
 
-    const [users, setUsers] = useState<IUserListI[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchUsers = async () => {
         if (user) {
-
             try {
-                const response = await axiosInstance.get(`/auth/user/${user.id}`);
+                const response = await userApiRequest.getUsers(user.id)
                 setUsers(response.data);
             } catch (error: any) {
                 setError(error.message);
@@ -65,13 +47,9 @@ export const useUserList = () => {
                 setLoading(false);
             }
         }
-
     };
     useEffect(() => {
         fetchUsers();
     }, []);
-
-
-
-    return { users, loading, error, refreshUserList: fetchUsers};
+    return { users, loading, error, refreshUsers: fetchUsers};
 };

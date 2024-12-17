@@ -1,10 +1,9 @@
-import axiosInstance from "@/api";
+import { bookmarkApiRequest } from "@/api/bookmark";
 import actionNotification from "@/components/NotificationState/Toast";
 import { RootState } from "@/store/store";
+import { IBookmarkSummary } from "@/types/bookmark.interface";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { IGetHistoryUserI } from "./useHistory";
-import { IAuthorI } from "./useAuthor";
 
 export function useBookmark(novelId: number) {
     const user = useSelector((state: RootState) => state.auth.user)
@@ -13,11 +12,7 @@ export function useBookmark(novelId: number) {
     const fetchCheckBookmark = async () => {
         try {
             if (user) {
-                const response = await axiosInstance.get(`/bookmark/check/`, {
-                    params: {
-                        userId: user.id, novelId
-                    }
-                });
+                const response = await bookmarkApiRequest.fetchCheckBookmarkAPI(user.id, novelId);
                 setIdBookmark(response.data);
             }
         } catch (error: any) {
@@ -32,10 +27,7 @@ export function useBookmark(novelId: number) {
     const addBookmark = async () => {
         try {
             if (user) {
-                const response = await axiosInstance.post(`/bookmark/add`, {
-                    userId: user.id, novelId
-                });
-                console.log(response.data)
+                await bookmarkApiRequest.addBookmarkAPI(user.id, novelId);
                 actionNotification('Cất giữ thành công.', 'success')
                 fetchCheckBookmark(); // Refresh bookmark state
             }
@@ -47,8 +39,7 @@ export function useBookmark(novelId: number) {
     const rmBookmark = async (id: number) => {
         try {
             if (user) {
-                const response = await axiosInstance.delete(`/bookmark/delete/${id}`);
-                console.log(response.data)
+                await bookmarkApiRequest.removeBookmarkAPI(id);
                 actionNotification('Hủy cất giữ thành công.', 'success')
                 fetchCheckBookmark(); // Refresh bookmark state
             }
@@ -62,36 +53,19 @@ export function useBookmark(novelId: number) {
     return { idBookmark, refetch: fetchCheckBookmark, addBookmark, rmBookmark }
 }
 
-interface NovelBookmark {
-    id: string;
-    title: string;
-    image: string;
-    banner: string;
-    state: string;
-    description: string;
-    updatedAt: string;
-    categoryId: string;
-    categoryName: string;
-    posterId: string;
-    posterName: string;
-    posterAvatar: string;
-    author: IAuthorI[];
-    bookmarkId: number
-}
-
 export default function useGetBookmark() {
     const user = useSelector((state: RootState) => state.auth.user);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [bookmark, setBookmark] = useState<NovelBookmark[]>([]);
+    const [bookmark, setBookmark] = useState<IBookmarkSummary[]>([]);
 
     const getAll = async () => {
         if (!user) return;
 
         try {
-            const response = await axiosInstance.get(`/bookmark/all/${user.id}`);
-            setBookmark(response.data);
+            const response = await bookmarkApiRequest.getAllBookmarksAPI(user.id);
             console.log(response.data)
+            setBookmark(response.data);
         } catch (error) {
             actionNotification('Tải thất bại, vui lòng thao tác lại.', 'error');
         } finally {
@@ -105,8 +79,8 @@ export default function useGetBookmark() {
 
     const removeBookmark = async (bookmarkId: number) => {
         try {
-            const response = await axiosInstance.delete(`/bookmark/delete/${bookmarkId}`);
-            actionNotification("Đã bỏ cất giữ", "success")
+            await bookmarkApiRequest.removeBookmarkAPI(bookmarkId);
+            actionNotification("Đã bỏ cất giữ.", "success");
             getAll();
 
         } catch (error) {

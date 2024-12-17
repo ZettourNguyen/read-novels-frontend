@@ -3,7 +3,7 @@ import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
 import CustomModal from "@/components/Popup/ConfirmPopupModal";
 
-import { useRoleList } from "@/hooks/useRole";
+import { useRoles } from "@/hooks/useRole";
 import { RootState } from "@/store/store";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -20,7 +20,7 @@ export default function ManagerRole() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const { roles, loading, error, refetch } = useRoleList()
+    const { roles, loading, error, refetch } = useRoles()
 
     const filtered = roles
         .filter(role => {

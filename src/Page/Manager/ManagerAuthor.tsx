@@ -2,7 +2,7 @@ import axiosInstance from "@/api";
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
 import CustomModal from "@/components/Popup/ConfirmPopupModal";
-import { useAuthor } from "@/hooks/useAuthor";
+import { useAuthors } from "@/hooks/useAuthor"; 
 import { RootState } from "@/store/store";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +17,7 @@ export default function ManagerAuthor() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const { authors, refetch } = useAuthor()
+    const { authors, refetch } = useAuthors()
 
     const filtered = authors.filter(author => {
         return author.nickname.toLowerCase().includes(searchTerm.toLowerCase());
@@ -190,7 +190,7 @@ export default function ManagerAuthor() {
                                         <td className=" px-3 py-2 text-center">{index + 1}</td>
                                         <td className=" px-3 py-2 max-w-[450px] text-center truncate">{(author.firstname || "trống")} {(author.lastname || "")}</td>
                                         <td className=" px-3 py-2 text-center max-w-[450px]">{author.nickname}</td>
-                                        <td className=" px-3 py-2 text-center max-w-[450px]">{author.novelCount}</td>
+                                        <td className=" px-3 py-2 text-center max-w-[450px]">{author.totalNovels}</td>
                                         <td className=" px-3 py-2 flex flex-wrap justify-center border-collapse">
 
                                             <ButtonWithTooltip
@@ -199,7 +199,7 @@ export default function ManagerAuthor() {
                                             >
                                                 <BiSolidPencil />
                                             </ButtonWithTooltip>
-                                            {author.novelCount > 0 || (
+                                            {author.totalNovels > 0 || (
                                                 <ButtonWithTooltip
                                                     className="bg-[#ED9A96] hover:bg-red text-white font-bold py-2 px-2 mr-0 rounded"
                                                     title="Xóa truyện"

@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom'
 import NoverDetailsCard from '@/components/Card/NovelDetail';
 import NovelDetailsChapters from '@/components/Card/NovelDetailsChapters';
 import NovelComments from '@/components/Card/NovelComments';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
 import NovelRating from '@/components/Card/NovelRating';
 import { useState } from 'react';
 
@@ -16,7 +14,6 @@ function Novel() {
     if (isNaN(novelIdNumber)) {
         return <div>Error: Invalid novel ID</div>;
     }
-
 
     // useEffect(() => {
     //     // Cuộn lên đầu trang mỗi khi component được mount

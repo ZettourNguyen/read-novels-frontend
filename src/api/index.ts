@@ -5,7 +5,6 @@ const BASE_URL = import.meta.env.VITE_BASE_URL ||'http://localhost:3001'
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
 });
-console.log('BASE_URL:', BASE_URL);
 
 axiosInstance.interceptors.request.use(async function (config) {
     const token = localStorage.getItem('accessToken')
@@ -21,7 +20,7 @@ axiosInstance.interceptors.response.use(async function (response) {
     return response;
 }, function (error) {
     if(error.response){
-        console.log('errorr server: ' , error.response.data)
+        // console.log('errorr server: ' , error.response.data)
     }
     return Promise.reject(error);
 });

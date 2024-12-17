@@ -1,4 +1,5 @@
 import axiosInstance from "@/api";
+import { viewApiRequest } from "@/api/view";
 import { useState } from "react";
 
 export const useIncrementView = () => {
@@ -9,9 +10,7 @@ export const useIncrementView = () => {
         setLoading(true);
         setError(null);
         try {
-            await axiosInstance.post(`/view/increment/${chapterId}`, null, {
-                params: { userId }
-            });
+            await viewApiRequest.postView(chapterId, userId)
             console.log("add view success")
         } catch (err) {
             setError('Failed to increment view');
@@ -33,7 +32,7 @@ export const useTotalViews = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axiosInstance.get(`/view/total/${novelId}`);
+            const response = await viewApiRequest.getNovelViews(novelId)
             setTotalViews(response.data);
         } catch (err) {
             setError('Failed to fetch total views');

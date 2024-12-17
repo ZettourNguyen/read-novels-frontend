@@ -1,7 +1,7 @@
 import axiosInstance from "@/api";
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
-import { useRoleList, useUserRole } from "@/hooks/useRole";
+import { useRoles, useUserRole } from "@/hooks/useRole";
 import { IoBan } from "react-icons/io5";
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function ManagerUserRole() {
     getUserName()
 
     const { userRoles, refetch } = useUserRole(+userId); // Danh sách quyền của vai trò
-    const { roles, loading, error } = useRoleList(); // Danh sách quyền
+    const { roles, loading, error } = useRoles(); // Danh sách quyền
 
     // Set để kiểm tra nhanh các role ID có trong roles
     const userRoleIds = new Set(userRoles);

@@ -10,6 +10,7 @@ import actionNotification from "../NotificationState/Toast";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import StarRating from "../Another/StarRating";
 import { useUserPermission } from "@/hooks/usePermission";
+import { EnumPermission } from "@/Enums/Permission";
 
 export interface RatingDetails {
     id: number;
@@ -31,7 +32,7 @@ export default function NovelRating({ novelId }: { novelId: number }) {
     const [ratingPoint, setRatingPoint] = useState(5);
     const { permissions } = useUserPermission();
     const hasNoReviewPermission = permissions.some(permission =>
-        permission.name.includes("NoReview")
+        permission.name === EnumPermission.NoReview
       );
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRatingPoint(parseFloat(event.target.value));

@@ -5,8 +5,8 @@ import { BiSolidBookAdd } from "react-icons/bi";
 import { TbInfoCircleFilled } from "react-icons/tb";
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
 import CropperImage from "@/components/Another/CropperImage";
-import { useCategoryList } from "@/hooks/userCategoryList";
-import { TagProps, useTagList } from "@/hooks/userTagList";
+import { useCategories } from "@/hooks/useCategories";
+import { TagProps, useTags } from "@/hooks/useTags";
 import { useSelector } from "react-redux";
 import { UpdateNovelDTO, useNovel, useNovelDetails } from "@/hooks/useNovel";
 import { RootState } from "@/store/store";
@@ -21,8 +21,8 @@ export default function EditNovel() {
     const novelIdNumber = Number(novelId);
 
     const { novelDetails, loading, error } = useNovelDetails(novelIdNumber);
-    const { categories } = useCategoryList();
-    const { tags } = useTagList();
+    const { categories } = useCategories();
+    const { tags } = useTags();
     const user = useSelector((state: RootState) => state.auth.user);
 
     const [selectedTag, setSelectedTag] = useState<TagProps[]>([]);

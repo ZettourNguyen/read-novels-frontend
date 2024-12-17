@@ -1,18 +1,9 @@
 import { FaRegEye } from 'react-icons/fa'
 import userIcon from '@/assets/imgs/user-128.svg'
 import { timeAgo } from '@/store/Time'
-import { IAuthorI } from '@/hooks/useAuthor'
+import { INovelSummary } from '@/types/novel.interface'
 
-export interface NovelFeedCardProps {
-    id: number
-    title: string
-    image: string,
-    author: IAuthorI[],
-    lastChapterCreatedAt: string,
-    views: number
-}
-
-function NovelFeedCard({ item }: { item: NovelFeedCardProps }) {
+function NovelFeedCard({ item }: { item: INovelSummary }) {
 
     return (
         <div className='mw-[100%] flex gap-x-[20px] border-[#f0f1f2] py-3 border-b-2 lg:flex-row w-[100%]   '>
@@ -40,7 +31,7 @@ function NovelFeedCard({ item }: { item: NovelFeedCardProps }) {
                             <img src={userIcon} alt="" className='w-100 rounded-full h-100' />
                         </div>
                         <div className='flex gap-3  '>
-                            {item.author.map((author) => (
+                            {item.authors.map((author) => (
                                 <div key={author.id} className='flex hover:underline items-center gap-1 cursor-pointer'>
 
                                     <a href={`/list/author/${author.id}`} className='hover:text-theme_color text-gray_text text-xs'>
@@ -53,12 +44,12 @@ function NovelFeedCard({ item }: { item: NovelFeedCardProps }) {
 
                     <div className='flex items-center gap-2'>
                         <FaRegEye className="text-[#909399]" />
-                        <span className='text-gray_text text-xs'>{item.views}</span>
+                        <span className='text-gray_text text-xs'>{item.totalViews}</span>
 
                     </div>
                 </div>
                 <div>
-                    <p className='text-xs mt-1 italic'>{timeAgo(item.lastChapterCreatedAt)}</p>
+                    <p className='text-xs mt-1 italic'>{timeAgo(item.createdAt)}</p>
                 </div>
             </div>
         </div>

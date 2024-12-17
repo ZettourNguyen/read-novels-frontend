@@ -1,6 +1,6 @@
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
 import actionNotification from "@/components/NotificationState/Toast";
-import { IChapterInputI, useNovel } from "@/hooks/useNovel";
+import { useNovel } from "@/hooks/useNovel";
 import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/Loading";
@@ -10,6 +10,8 @@ import { Link, useParams } from "react-router-dom";
 import { useAddChapters } from "@/hooks/useChapters";
 import axios from "axios";
 import { FaRegRectangleList } from "react-icons/fa6";
+import { IChapterCreate } from "@/types/chapter.interface";
+import novelApiRequest from "@/api/novel";
 export default function PublishChapter() {
     const { novelId } = useParams<{ novelId: string }>();
     const novelIdNumber = Number(novelId);
@@ -51,7 +53,7 @@ export default function PublishChapter() {
             setIsButtonDisabled(false)
             return
         }
-        const data: IChapterInputI = {
+        const data: IChapterCreate = {
             title: title,
             content: contentChapter,
             novelId: novelIdNumber,
@@ -61,10 +63,10 @@ export default function PublishChapter() {
         }
         console.log(data)
         try {
-            const chapter = await createChapterAPI(data);
+            const chapter = await novelApiRequest.createChapter(data)
             setIsButtonDisabled(true);
             if (chapter) {
-                actionNotification("upLoadChapter completed successfully!", 'success');
+                actionNotification(`${chapter.data.message}`, 'success');
                 setTimeout(() => {
                     window.location.reload();
                 }, 1200);

@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { BiSolidBookAdd } from "react-icons/bi";
 import { TbInfoCircleFilled } from "react-icons/tb";
 import { AiOutlineClose } from 'react-icons/ai';
-import { useCategoryList } from "@/hooks/userCategoryList";
-import { TagProps, useTagList } from "@/hooks/userTagList";
+import { useCategories } from "@/hooks/useCategories";
+import { TagProps, useTags } from "@/hooks/useTags";
 import { TbPencilQuestion } from "react-icons/tb";
 import { INovelI, INovelInputI } from "../Novel/Novel.interface";
 import { useSelector } from "react-redux";
@@ -18,24 +18,26 @@ import { storage } from "@/store/firebaseConfig";
 import history from "@/router/history";
 import { ToastContainer } from "react-toastify";
 import { FiInfo } from "react-icons/fi";
+import { ICreateNovel } from "@/types/novel.interface";
+import novelApiRequest from "@/api/novel";
 
 export const defaultImage = 'https://static.sangtacvietcdn.xyz/img/bookcover256.jpg'
 
 export default function NewNovel() {
     const [selectedTag, setSelectedTag] = useState<TagProps[]>([]);
     const [isChecked, setIsChecked] = useState(false);
-    const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
+    const [categoryId, setCategoryId] = useState<number | -1>(-1);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [uploadImageCover, setUploadImageCover] = useState<boolean>(false);
     const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
     const novelNameRef = useRef<HTMLInputElement>(null);
     const authorNameRef = useRef<HTMLInputElement>(null);
     const introductionRef = useRef<HTMLTextAreaElement>(null);
-    const [novel, setNovel] = useState<INovelI | undefined>();
-    const { categories } = useCategoryList();
-    const { tags } = useTagList();
+    const { categories } = useCategories();
+    const { tags } = useTags();
     const user = useSelector((state: RootState) => state.auth.user)
-    const { createNovelAPI, error } = useNovel();
+    const [novelId, setNovelId] = useState<number>(0);
+
     useEffect(() => {
         if (selectedTag.length > 5) {
             setIsFormVisible(false);
@@ -85,9 +87,17 @@ export default function NewNovel() {
                 actionNotification("Bạn chưa nhập Tên truyện", 'warning')
                 return;
             }
-            const authorName = authorNameRef.current?.value || null
-            if (categoryId == null) {
+            const authorName = authorNameRef.current?.value;
+            // if (!authorName) {
+            //     actionNotification("Bạn chưa nhập Tên tác giả", 'warning')
+            //     return
+            // } // tac gia === username neu de trong
+            if (categoryId < 1) {
                 actionNotification("Bạn chưa nhập Thể loại", 'warning')
+                return
+            }
+            if (!introductionRef.current?.value) {
+                actionNotification("Bạn chưa nhập giới thiệu", 'warning')
                 return
             }
             if (!isChecked) {
@@ -96,27 +106,33 @@ export default function NewNovel() {
             }
             const idString = user?.id.toString() || '0'; // Ép kiểu sang chuỗi và xử lý giá trị null
             const posterId: number = parseInt(idString);
-            const novelInput: INovelInputI = {
-                data: {
-                    title: `${novelNameRef.current?.value}`,
-                    image: defaultImage,
-                    banner: null,
-                    state: "unpublished",
-                    description: `${introductionRef.current?.value}`,
-                    posterId: posterId,
-                    categoryId: categoryId
-                },
-                authorNameInInput: authorName,
+            const novelData: ICreateNovel = {
+                title: `${novelNameRef.current?.value}`,
+                image: defaultImage,
+                banner: null,
+                state: "unpublished",
+                description: `${introductionRef.current?.value}`,
+                posterId: posterId,
+                categoryId: categoryId,
+                authorNameInInput: authorName || null,
                 tagsId: selectedTagIds
             };
-            const novelResult = await createNovelAPI(novelInput)
-            setNovel(novelResult)
-            if (error) {
-                actionNotification("Tiểu thuyết đã tạo thất bại!", 'error')
-
+            // createNovelAPI(novelData)
+            // if (!loading) {
+            //     setUploadImageCover(true)
+            // }
+            
+            try {
+                const response = await novelApiRequest.createNovel(novelData);
+                setNovelId(response.data); 
+                console.log('API response data:', response.data); 
+                actionNotification('Truyện được tạo thành công!', 'success'); 
+                setUploadImageCover(true);  // Chỉ gọi nếu API thành công
+            } catch (error: any) {
+                actionNotification(`${error.response.data.message}`, 'error');
+                console.error('Error creating novel:', error.response.data);
             }
-            actionNotification("Tiểu thuyết đã được tạo thành công!", 'success')
-            setUploadImageCover(true)
+            console.log(novelId)
 
         }
     };
@@ -139,39 +155,44 @@ export default function NewNovel() {
     const handleUpload = async () => {
         if (croppedImage) {
             try {
+                console.log(novelId)
                 const croppedImageBlob = await urlToBlob(croppedImage);
-                const storageRef = ref(storage, `imageCover/${novel?.id}/imageCover`);
+                const storageRef = ref(storage, `imageCover/${novelId}/imageCover`);
                 const uploadTask = uploadBytesResumable(storageRef, croppedImageBlob);
-
+    
                 uploadTask.on(
                     'state_changed',
                     (snapshot) => {
-                        // Theo dõi tiến trình tải lên nếu cần
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log(`Upload is ${progress.toFixed(2)}% done`);
                     },
                     (error) => {
                         console.error('Upload failed:', error);
                         actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
                     },
-                    () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                            setImageUrl(downloadURL); // Cập nhật imageUrl
+                    async () => {
+                        try {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            setImageUrl(downloadURL);
                             console.log('File available at', downloadURL);
+                            
                             const data = {
-                                novelId: novel?.id,
-                                image: downloadURL // Sử dụng downloadURL trực tiếp
+                                id: novelId,
+                                image: downloadURL
                             };
-                            try {
-                                const response = await axiosInstance.put('/novel/image', data);
-                                console.log('response.data:', response.data);
-                                actionNotification("Ảnh bìa đã thêm thành công!", 'success');
-                                setTimeout(() => {
-                                    history.push('/uploader/published');
-                                }, 2000);
-                            } catch (error) {
-                                console.error("API update failed:", error);
-                                actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
-                            }
-                        });
+                            
+                            const response = await axiosInstance.patch(`/novel/update/${user?.id}`, data);
+                            console.log('response.data:', response.data);
+                            actionNotification("Ảnh bìa đã thêm thành công!", 'success');
+                            
+                            
+                            // Chờ API xong trước khi chuyển hướng
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            history.push('/uploader/published');
+                        } catch (error) {
+                            console.error("API update failed:", error);
+                            actionNotification("Ảnh bìa đã thêm thất bại!", 'error');
+                        }
                     }
                 );
             } catch (error) {
@@ -182,6 +203,7 @@ export default function NewNovel() {
             actionNotification("Phải cắt ảnh trước khi Lưu", 'warning');
         }
     };
+    
 
 
     return (
@@ -208,12 +230,12 @@ export default function NewNovel() {
                                             ref={novelNameRef}
                                             required />
                                     </div>
-                                    <ButtonWithTooltip className="bg-sky_blue_light_500 hover:bg-sky_blue_light
+                                    {/* <ButtonWithTooltip className="bg-sky_blue_light_500 hover:bg-sky_blue_light
                                      text-white font-bold py-2 px-2 mr-2 rounded"
                                         onClick={handleCheckButtonClick}
                                         title="Kiểm tra tên truyện">
                                         <TbPencilQuestion />
-                                    </ButtonWithTooltip>
+                                    </ButtonWithTooltip> */}
                                 </div>
 
                             </div>
@@ -318,9 +340,9 @@ export default function NewNovel() {
                             </div>
                         </div>
                     )}
-                    {uploadImageCover &&  <CropperImage
+                    {uploadImageCover && <CropperImage
                         onCropComplete={handleCropComplete}
-                        size={{ width: 300, height: 400 }} 
+                        size={{ width: 300, height: 400 }}
                     />}
                     {croppedImage && (
                         <div className="mt-5">

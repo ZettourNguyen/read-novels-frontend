@@ -1,12 +1,6 @@
 import { useBanner } from '@/hooks/useNovel';
 import React from 'react';
 
-interface Banner {
-    id: string;
-    title: string;
-    banner: string;
-}
-
 function Banner() {
     const { novels, loading, error, refetch: fetchMyPublishedNovels } = useBanner();
 

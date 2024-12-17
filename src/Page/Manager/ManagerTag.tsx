@@ -1,5 +1,5 @@
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip ";
-import { useTagList } from "@/hooks/userTagList";
+import { useTags } from "@/hooks/useTags";
 import { useEffect, useRef, useState } from "react";
 import { BiSearchAlt, BiSolidBookAdd, BiSolidPencil } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -20,7 +20,7 @@ export default function ManagerTag() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const { tags, loading, error, refetch } = useTagList()
+    const { tags, loading, error, refetch } = useTags()
 
     const filtered = tags
         .filter(category => {

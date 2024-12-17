@@ -1,4 +1,4 @@
-import { addHistory } from '@/hooks/useHistory';
+import { postHistory } from '@/hooks/useHistory';
 import React, { useState } from 'react';
 
 const HistoryComponent: React.FC = () => {
@@ -6,9 +6,9 @@ const HistoryComponent: React.FC = () => {
     const [chapterId, setChapterId] = useState<number>(1); // Thay đổi giá trị theo nhu cầu
     const [message, setMessage] = useState<string>('');
 
-    const handleAddHistory = async () => {
+    const handlepostHistory = async () => {
         try {
-            await addHistory(userId, chapterId);
+            await postHistory(userId, chapterId);
             setMessage('Đã thêm lịch sử đọc mới.');
         } catch (error) {
             setMessage('Có lỗi xảy ra.');
@@ -17,7 +17,7 @@ const HistoryComponent: React.FC = () => {
 
     return (
         <div>
-            <button onClick={handleAddHistory}>Thêm lịch sử đọc</button>
+            <button onClick={handlepostHistory}>Thêm lịch sử đọc</button>
             <p>{message}</p>
         </div>
     );

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/api';
+import { tagApiRequest } from '@/api/tag';
 
 export interface TagProps {
     id: number
     name: string
 }
 
-export const useTagList = () => {
+export const useTags = () => {
     const [tags, setTags] = useState<TagProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -14,7 +15,7 @@ export const useTagList = () => {
     const fetchTags = async () => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get('/tags');
+            const response = await tagApiRequest.getTags()
             setTags(response.data);
         } catch (error) {
             setError('Lỗi khi lấy danh sách tag');
@@ -30,7 +31,7 @@ export const useTagList = () => {
     return { tags, loading, error, refetch: fetchTags };
 };
 
-export const useTagListByNovelId = (novelId: number) => {
+export const useTagsByNovelId = (novelId: number) => {
     const [tagsInNovel, setTagsInNovel] = useState<TagProps[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -38,7 +39,7 @@ export const useTagListByNovelId = (novelId: number) => {
     useEffect(() => {
         const fetchtags = async () => {
             try {
-                const response = await axiosInstance.get(`/tags/novel/${novelId}`);
+                const response = await tagApiRequest.getTagsNovel(novelId)
                 setTagsInNovel(response.data);
             } catch (error:any) {
                 setError(error.message);
